@@ -1,4 +1,4 @@
-//---------------------------------------------------------------------------
+п»ї//---------------------------------------------------------------------------
 
 #include <iostream>
 #include <cstdlib>
@@ -11,7 +11,7 @@
 //---------------------------------------------------------------------------
 
 int main(int argc, char* argv[]) {
-	//чтобы на консоль выводились русские буквы
+	//С‡С‚РѕР±С‹ РЅР° РєРѕРЅСЃРѕР»СЊ РІС‹РІРѕРґРёР»РёСЃСЊ СЂСѓСЃСЃРєРёРµ Р±СѓРєРІС‹
 	std::cout.imbue(std::locale(std::locale(".866"), new rus_codecvt() ));
 
 	std::auto_ptr<Human> man( new Human() );
@@ -19,10 +19,10 @@ int main(int argc, char* argv[]) {
 
 	comp->BaseShips();
 	man->BaseShips();
-	//очистка консоли
+	//РѕС‡РёСЃС‚РєР° РєРѕРЅСЃРѕР»Рё
 	std::system( "cls" );
 
-	std::cout << "Бой начался!" << std::endl;
+	std::cout << "Р‘РѕР№ РЅР°С‡Р°Р»СЃСЏ!" << std::endl;
 	while( !man->DropBomb( comp.get() ) && !comp->DropBomb( man.get() ) );
 
 	return 0;

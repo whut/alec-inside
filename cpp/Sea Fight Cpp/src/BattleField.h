@@ -1,72 +1,72 @@
-//---------------------------------------------------------------------------
+п»ї//---------------------------------------------------------------------------
 
 #ifndef BattleFieldH
 #define BattleFieldH
 #include <vector>
 //---------------------------------------------------------------------------
 class Ship;
-// Результат выстрела: { попал, мимо, еще раз }
+// Р РµР·СѓР»СЊС‚Р°С‚ РІС‹СЃС‚СЂРµР»Р°: { РїРѕРїР°Р», РјРёРјРѕ, РµС‰Рµ СЂР°Р· }
 enum ShootResult { srSuccess, srEmpty, srAgain };
 
-// Квадрат поля боя
+// РљРІР°РґСЂР°С‚ РїРѕР»СЏ Р±РѕСЏ
 class BattleSquare {
 	public:
-		// был ли уже обстрелян
+		// Р±С‹Р» Р»Рё СѓР¶Рµ РѕР±СЃС‚СЂРµР»СЏРЅ
 		bool IsBombed() const { return bombed_; }
-		// есть ли в квадрате корабль
+		// РµСЃС‚СЊ Р»Рё РІ РєРІР°РґСЂР°С‚Рµ РєРѕСЂР°Р±Р»СЊ
 		bool HasShip() const { return ship_ != NULL; }
-		// возвращает корабль или NULL
+		// РІРѕР·РІСЂР°С‰Р°РµС‚ РєРѕСЂР°Р±Р»СЊ РёР»Рё NULL
 		Ship* GetShip() const { return ship_; }
-		// x координата квадрата
+		// x РєРѕРѕСЂРґРёРЅР°С‚Р° РєРІР°РґСЂР°С‚Р°
 		int X() const { return x_; }
-		// у координата квадрата
+		// Сѓ РєРѕРѕСЂРґРёРЅР°С‚Р° РєРІР°РґСЂР°С‚Р°
 		int Y() const { return y_; }
-		// является ли квадрат соседним (или самим собой)
+		// СЏРІР»СЏРµС‚СЃСЏ Р»Рё РєРІР°РґСЂР°С‚ СЃРѕСЃРµРґРЅРёРј (РёР»Рё СЃР°РјРёРј СЃРѕР±РѕР№)
 		bool IsAdjacentOrSelf( const BattleSquare* other ) const;
-		// является ли квадрат соседним (исключая диагональные)
+		// СЏРІР»СЏРµС‚СЃСЏ Р»Рё РєРІР°РґСЂР°С‚ СЃРѕСЃРµРґРЅРёРј (РёСЃРєР»СЋС‡Р°СЏ РґРёР°РіРѕРЅР°Р»СЊРЅС‹Рµ)
 		bool IsAdjacentStraight( const BattleSquare* other ) const;
-		// сбросить бомбу
+		// СЃР±СЂРѕСЃРёС‚СЊ Р±РѕРјР±Сѓ
 		ShootResult DropBomb();
 	private:
-		// конструктор доступен только друзьям класса
-		// принимает координаты квадрата
+		// РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РґРѕСЃС‚СѓРїРµРЅ С‚РѕР»СЊРєРѕ РґСЂСѓР·СЊСЏРј РєР»Р°СЃСЃР°
+		// РїСЂРёРЅРёРјР°РµС‚ РєРѕРѕСЂРґРёРЅР°С‚С‹ РєРІР°РґСЂР°С‚Р°
 		BattleSquare( int x, int y ) : x_(x), y_(y), bombed_(false) {
 			ship_ = NULL;
 		}
-		//поместить корабль в квадрат
-		//только друзья могут делать это
+		//РїРѕРјРµСЃС‚РёС‚СЊ РєРѕСЂР°Р±Р»СЊ РІ РєРІР°РґСЂР°С‚
+		//С‚РѕР»СЊРєРѕ РґСЂСѓР·СЊСЏ РјРѕРіСѓС‚ РґРµР»Р°С‚СЊ СЌС‚Рѕ
 		void SetShip( Ship* s ) { ship_ = s; }
 
-		//копирование не требуется
+		//РєРѕРїРёСЂРѕРІР°РЅРёРµ РЅРµ С‚СЂРµР±СѓРµС‚СЃСЏ
 		BattleSquare( const BattleSquare& other );
 		BattleSquare& operator=( const BattleSquare& other );
-		//корабль
+		//РєРѕСЂР°Р±Р»СЊ
 		Ship* ship_;
 		int x_;
 		int y_;
-		//обстрелян?
+		//РѕР±СЃС‚СЂРµР»СЏРЅ?
 		bool bombed_;
-		// Класс Поле Боя может создавать Квадраты
+		// РљР»Р°СЃСЃ РџРѕР»Рµ Р‘РѕСЏ РјРѕР¶РµС‚ СЃРѕР·РґР°РІР°С‚СЊ РљРІР°РґСЂР°С‚С‹
 		friend class Battlefield;
 };
 
 typedef std::vector<BattleSquare*>::const_iterator BattleSquareConstIter;
 typedef std::vector<BattleSquare*>::iterator BattleSquareIter;
 
-//Поле Боя
+//РџРѕР»Рµ Р‘РѕСЏ
 class Battlefield {
 	public:
-		/* rowCount - число строк
-		   columnCount - число столбцов */
+		/* rowCount - С‡РёСЃР»Рѕ СЃС‚СЂРѕРє
+		   columnCount - С‡РёСЃР»Рѕ СЃС‚РѕР»Р±С†РѕРІ */
 		Battlefield( int rowCount, int columnCount );
 		virtual ~Battlefield();
-		// возвращает копию списка квадратов
+		// РІРѕР·РІСЂР°С‰Р°РµС‚ РєРѕРїРёСЋ СЃРїРёСЃРєР° РєРІР°РґСЂР°С‚РѕРІ
 		std::vector<BattleSquare*> GetSquares() const;
-		//пальнуть
+		//РїР°Р»СЊРЅСѓС‚СЊ
 		ShootResult DropBomb( int x, int y );
-		//разместить корабль s
-		// x,y - координаты квадрата в который будет помещен нос корабля
-		// возвращает успешность размещения
+		//СЂР°Р·РјРµСЃС‚РёС‚СЊ РєРѕСЂР°Р±Р»СЊ s
+		// x,y - РєРѕРѕСЂРґРёРЅР°С‚С‹ РєРІР°РґСЂР°С‚Р° РІ РєРѕС‚РѕСЂС‹Р№ Р±СѓРґРµС‚ РїРѕРјРµС‰РµРЅ РЅРѕСЃ РєРѕСЂР°Р±Р»СЏ
+		// РІРѕР·РІСЂР°С‰Р°РµС‚ СѓСЃРїРµС€РЅРѕСЃС‚СЊ СЂР°Р·РјРµС‰РµРЅРёСЏ
 		bool BaseShip( int x, int y, Ship* s );
 
 		int ColumnCount() const {
@@ -77,26 +77,26 @@ class Battlefield {
 		}
 
 		bool SquareExists( int x, int y ) const;
-		//возвращает итератор для квадрата
+		//РІРѕР·РІСЂР°С‰Р°РµС‚ РёС‚РµСЂР°С‚РѕСЂ РґР»СЏ РєРІР°РґСЂР°С‚Р°
 		BattleSquareConstIter GetSquare( int x, int y) const;
 	private:
 		int rowCount_;
 		int columnCount_;
-		//Квадраты
+		//РљРІР°РґСЂР°С‚С‹
 		std::vector<BattleSquare*> squares_;
 
-		//копирование не требуется
+		//РєРѕРїРёСЂРѕРІР°РЅРёРµ РЅРµ С‚СЂРµР±СѓРµС‚СЃСЏ
 		Battlefield( const Battlefield& other );
 		Battlefield& operator=( const Battlefield& other );
 
-		//возможно ли разместить корабль
-		//нос корабля помещается в квадрат *headSquareIter
+		//РІРѕР·РјРѕР¶РЅРѕ Р»Рё СЂР°Р·РјРµСЃС‚РёС‚СЊ РєРѕСЂР°Р±Р»СЊ
+		//РЅРѕСЃ РєРѕСЂР°Р±Р»СЏ РїРѕРјРµС‰Р°РµС‚СЃСЏ РІ РєРІР°РґСЂР°С‚ *headSquareIter
 		bool AllowBaseShip( const Ship* s,
 			BattleSquareConstIter headSquareIter ) const;
 };
 
 
-// Функциональный объект для поиска клеток по координатам
+// Р¤СѓРЅРєС†РёРѕРЅР°Р»СЊРЅС‹Р№ РѕР±СЉРµРєС‚ РґР»СЏ РїРѕРёСЃРєР° РєР»РµС‚РѕРє РїРѕ РєРѕРѕСЂРґРёРЅР°С‚Р°Рј
 class SquareCoordFinder {
 	public:
 		SquareCoordFinder( int x, int y ) : x_( x ), y_( y ) { }
@@ -108,7 +108,7 @@ class SquareCoordFinder {
 		int y_;
 };
 
-// Функциональный объект для поиска соседних клеток с кораблями
+// Р¤СѓРЅРєС†РёРѕРЅР°Р»СЊРЅС‹Р№ РѕР±СЉРµРєС‚ РґР»СЏ РїРѕРёСЃРєР° СЃРѕСЃРµРґРЅРёС… РєР»РµС‚РѕРє СЃ РєРѕСЂР°Р±Р»СЏРјРё
 class SquareAdjacentWithShipFinder {
 	public:
 		SquareAdjacentWithShipFinder( BattleSquare* square ) {
@@ -121,11 +121,11 @@ class SquareAdjacentWithShipFinder {
 			return false;
 		}
 	private:
-		//относительно квадрата
+		//РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РєРІР°РґСЂР°С‚Р°
 		BattleSquare* square_;
 };
-// Функциональный объект для поиска соседних квадратов
-// исключая (straightOnly = true) или включая диагональные
+// Р¤СѓРЅРєС†РёРѕРЅР°Р»СЊРЅС‹Р№ РѕР±СЉРµРєС‚ РґР»СЏ РїРѕРёСЃРєР° СЃРѕСЃРµРґРЅРёС… РєРІР°РґСЂР°С‚РѕРІ
+// РёСЃРєР»СЋС‡Р°СЏ (straightOnly = true) РёР»Рё РІРєР»СЋС‡Р°СЏ РґРёР°РіРѕРЅР°Р»СЊРЅС‹Рµ
 class SquareAdjacentFinder {
 	public:
 		SquareAdjacentFinder( BattleSquare* square, bool straightOnly )
@@ -137,7 +137,7 @@ class SquareAdjacentFinder {
 				square_->IsAdjacentOrSelf( other ) );
 		}
 	private:
-		//относительно квадрата
+		//РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РєРІР°РґСЂР°С‚Р°
 		BattleSquare* square_;
 		bool straightOnly_;
 };

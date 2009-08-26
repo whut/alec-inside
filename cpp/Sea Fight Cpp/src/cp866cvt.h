@@ -1,4 +1,4 @@
-#ifndef cp866cvtH
+﻿#ifndef cp866cvtH
 #define cp866cvtH
 
 #include <locale>

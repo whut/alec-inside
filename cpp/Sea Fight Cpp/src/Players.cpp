@@ -1,4 +1,4 @@
-//---------------------------------------------------------------------------
+п»ї//---------------------------------------------------------------------------
 #include <algorithm>
 #include <limits>
 #include <functional>
@@ -13,9 +13,9 @@
 
 // --- Player ---
 Player::Player() {
-	//создаем поле боя
+	//СЃРѕР·РґР°РµРј РїРѕР»Рµ Р±РѕСЏ
 	bf = new Battlefield( ROWS, COLUMNS  );
-	//заполняем корабли
+	//Р·Р°РїРѕР»РЅСЏРµРј РєРѕСЂР°Р±Р»Рё
 	ships_.push_back( new Ship( 1 ) );
 	ships_.push_back( new Ship( 1 ) );
 	ships_.push_back( new Ship( 1 ) );
@@ -26,28 +26,28 @@ Player::Player() {
 	ships_.push_back( new Ship( 4 ) );
 }
 Player::~Player() {
-	//удаляем корабли
+	//СѓРґР°Р»СЏРµРј РєРѕСЂР°Р±Р»Рё
 	std::for_each( ships_.begin(), ships_.end(), wipe<Ship> );
-	//удаляем поле боя
+	//СѓРґР°Р»СЏРµРј РїРѕР»Рµ Р±РѕСЏ
 	delete bf;
 }
 bool Player::HasLiveShips() const {
-	//ищем живой корабль
+	//РёС‰РµРј Р¶РёРІРѕР№ РєРѕСЂР°Р±Р»СЊ
 	return ( std::find_if( ships_.begin(), ships_.end(),
 		std::mem_fun( &Ship::IsLive ) ) != ships_.end() );
 }
 void Player::CheckShip( const Ship* s ) {
 	if ( !s->IsLive() ) {
-		std::cout << "Затоплен " << s->DeckCount() <<
-			"-палубный корабль" << std::endl;
+		std::cout << "Р—Р°С‚РѕРїР»РµРЅ " << s->DeckCount() <<
+			"-РїР°Р»СѓР±РЅС‹Р№ РєРѕСЂР°Р±Р»СЊ" << std::endl;
 	}
 }
 
 // --- Human ---
 
 void Human::BaseShips() {
-	std::cout << "Расставьте ваши корабли. "
-		"Корабли плывут справа налево и снизу вверх." << std::endl;
+	std::cout << "Р Р°СЃСЃС‚Р°РІСЊС‚Рµ РІР°С€Рё РєРѕСЂР°Р±Р»Рё. "
+		"РљРѕСЂР°Р±Р»Рё РїР»С‹РІСѓС‚ СЃРїСЂР°РІР° РЅР°Р»РµРІРѕ Рё СЃРЅРёР·Сѓ РІРІРµСЂС…." << std::endl;
 	Drawer::Draw( Field(), true );
 	for ( ShipIter it( ships_.begin() ); it != ships_.end(); ++it ) {
 		while ( !TryBaseShip( *it ) );
@@ -58,22 +58,22 @@ bool Human::DropBomb( const Player* enemy ) {
 	Drawer::Draw( Field(), true );
 	Drawer::Draw( enemy->Field(), false );
 
-	std::cout << "Твой ход. Стреляй!" << std::endl;
+	std::cout << "РўРІРѕР№ С…РѕРґ. РЎС‚СЂРµР»СЏР№!" << std::endl;
 	int x = RequestCoordinate( enemy->Field()->ColumnCount(), "X: " );
 	int y = RequestCoordinate( enemy->Field()->RowCount(), "Y: " );
 	switch( enemy->Field()->DropBomb( x, y ) ) {
 		case srAgain:
-			std::cout << "Ты туда уже стрелял. Не трать патроны!" <<
+			std::cout << "РўС‹ С‚СѓРґР° СѓР¶Рµ СЃС‚СЂРµР»СЏР». РќРµ С‚СЂР°С‚СЊ РїР°С‚СЂРѕРЅС‹!" <<
 				std::endl;
 			return DropBomb( enemy );
 		case srEmpty:
-			std::cout << "Мазила." << std::endl;
+			std::cout << "РњР°Р·РёР»Р°." << std::endl;
 			break;
 		case srSuccess:
-			std::cout << "Хороший выстрел. Попал!" << std::endl;
+			std::cout << "РҐРѕСЂРѕС€РёР№ РІС‹СЃС‚СЂРµР». РџРѕРїР°Р»!" << std::endl;
 			CheckShip( ( *( enemy->Field()->GetSquare( x, y ) ) )->GetShip() );
 			if ( !enemy->HasLiveShips() ) {
-				std::cout << "Поздравляю, ты выиграл!" << std::endl;
+				std::cout << "РџРѕР·РґСЂР°РІР»СЏСЋ, С‚С‹ РІС‹РёРіСЂР°Р»!" << std::endl;
 				return true;
 			}
 			return DropBomb( enemy );
@@ -81,22 +81,22 @@ bool Human::DropBomb( const Player* enemy ) {
 	return false;
 }
 bool Human::TryBaseShip( Ship* s ) const {
-	std::cout << "Разместите " << s->DeckCount() <<
-		"-палубный корабль." << std::endl;
+	std::cout << "Р Р°Р·РјРµСЃС‚РёС‚Рµ " << s->DeckCount() <<
+		"-РїР°Р»СѓР±РЅС‹Р№ РєРѕСЂР°Р±Р»СЊ." << std::endl;
 	if ( s->DeckCount() > 1 ) {
-		int align = Console::Request<int>( "Ориентация корабля "
-			"(0 - горизонтальная, 1 - вертикальная):" );
+		int align = Console::Request<int>( "РћСЂРёРµРЅС‚Р°С†РёСЏ РєРѕСЂР°Р±Р»СЏ "
+			"(0 - РіРѕСЂРёР·РѕРЅС‚Р°Р»СЊРЅР°СЏ, 1 - РІРµСЂС‚РёРєР°Р»СЊРЅР°СЏ):" );
 		s->SetAlign( ShipAlign( align == 0 ? 0 : 1 ) );
 	}
 
 	int x = RequestCoordinate( Field()->ColumnCount(),
-		"X координата носа:" );
+		"X РєРѕРѕСЂРґРёРЅР°С‚Р° РЅРѕСЃР°:" );
 	int y = RequestCoordinate( Field()->RowCount(),
-		"Y координата носа:" );
+		"Y РєРѕРѕСЂРґРёРЅР°С‚Р° РЅРѕСЃР°:" );
 
 	if ( !Field()->BaseShip( x, y, s ) ) {
-		std::cout << "Здесь нельзя размещать корабль. "
-			"Попробуйте снова." << std::endl;
+		std::cout << "Р—РґРµСЃСЊ РЅРµР»СЊР·СЏ СЂР°Р·РјРµС‰Р°С‚СЊ РєРѕСЂР°Р±Р»СЊ. "
+			"РџРѕРїСЂРѕР±СѓР№С‚Рµ СЃРЅРѕРІР°." << std::endl;
 		return false;
 	}
 	return true;
@@ -105,7 +105,7 @@ int Human::RequestCoordinate( int maxValue, std::string coordName ) {
 	int coord = 0;
 	do {
 		if ( coord != 0 ) {
-			std::cout << "Неверная координата. Введите снова." <<
+			std::cout << "РќРµРІРµСЂРЅР°СЏ РєРѕРѕСЂРґРёРЅР°С‚Р°. Р’РІРµРґРёС‚Рµ СЃРЅРѕРІР°." <<
 				std::endl;
 		}
 		coord = Console::Request<int>( coordName );
@@ -131,30 +131,30 @@ void Computer::BaseShips( ) {
 	}
 }
 bool Computer::DropBomb( const Player* enemy ) {
-	std::cout << "Я хожу." << std::endl;
+	std::cout << "РЇ С…РѕР¶Сѓ." << std::endl;
 
 	BattleSquare* square = FetchNextSquare();
 
-	std::cout << "Стреляю так: Х= " << square->X() << " , Y= " <<
+	std::cout << "РЎС‚СЂРµР»СЏСЋ С‚Р°Рє: РҐ= " << square->X() << " , Y= " <<
 		square->Y() << std::endl;
 
 	switch( square->DropBomb() ) {
 		case srEmpty:
-			std::cout << "Промазал." << std::endl;
+			std::cout << "РџСЂРѕРјР°Р·Р°Р»." << std::endl;
 			break;
 		case srSuccess:
-			std::cout << "Я попал!" << std::endl;
+			std::cout << "РЇ РїРѕРїР°Р»!" << std::endl;
 			CheckShip( square->GetShip() );
 			if ( !enemy->HasLiveShips() ) {
-				std::cout << "И все-таки я выиграл! Выпей вина! :P" <<
+				std::cout << "Р РІСЃРµ-С‚Р°РєРё СЏ РІС‹РёРіСЂР°Р»! Р’С‹РїРµР№ РІРёРЅР°! :P" <<
 					std::endl;
 				return true;
 			}
 
 			lastShipSquares_.push_back( square );
-			//если корабль убит
+			//РµСЃР»Рё РєРѕСЂР°Р±Р»СЊ СѓР±РёС‚
 			if ( !square->GetShip()->IsLive() ) {
-				//удалить все соседние клетки
+				//СѓРґР°Р»РёС‚СЊ РІСЃРµ СЃРѕСЃРµРґРЅРёРµ РєР»РµС‚РєРё
 				for( BattleSquareConstIter it ( lastShipSquares_.begin() ) ;
 					it != lastShipSquares_.end(); ++it ) {
 					RemoveAdjacentSquares( *it );
@@ -167,7 +167,7 @@ bool Computer::DropBomb( const Player* enemy ) {
 }
 
 
-//удалить соседние клетки для square
+//СѓРґР°Р»РёС‚СЊ СЃРѕСЃРµРґРЅРёРµ РєР»РµС‚РєРё РґР»СЏ square
 void Computer::RemoveAdjacentSquares( BattleSquare* square ) {
 	squares_.erase(
 		std::remove_if( squares_.begin(), squares_.end(),
@@ -175,23 +175,23 @@ void Computer::RemoveAdjacentSquares( BattleSquare* square ) {
 		squares_.end()
 	);
 }
-//извлечь очередной квадрат из списка необстрелянных
+//РёР·РІР»РµС‡СЊ РѕС‡РµСЂРµРґРЅРѕР№ РєРІР°РґСЂР°С‚ РёР· СЃРїРёСЃРєР° РЅРµРѕР±СЃС‚СЂРµР»СЏРЅРЅС‹С…
 BattleSquare* Computer::FetchNextSquare() {
-	//если нет обстреливаемого корабля
+	//РµСЃР»Рё РЅРµС‚ РѕР±СЃС‚СЂРµР»РёРІР°РµРјРѕРіРѕ РєРѕСЂР°Р±Р»СЏ
 	if ( lastShipSquares_.empty() ) {
-		//берем случайный квадрат
+		//Р±РµСЂРµРј СЃР»СѓС‡Р°Р№РЅС‹Р№ РєРІР°РґСЂР°С‚
 		int squareIndex = RandomRange( 0, squares_.size() - 1 );
 		BattleSquare* square = squares_[ squareIndex ];
-		//удаляем его из списка
+		//СѓРґР°Р»СЏРµРј РµРіРѕ РёР· СЃРїРёСЃРєР°
 		squares_.erase( squares_.begin() + squareIndex );
 		return square;
 	}
-	// если попали один раз
+	// РµСЃР»Рё РїРѕРїР°Р»Рё РѕРґРёРЅ СЂР°Р·
 	else if ( lastShipSquares_.size() == 1 ) {
 		int x = lastShipSquares_[0]->X();
 		int y = lastShipSquares_[0]->Y();
-		//из доступных квадратов выбираем случайно
-		//или не случайно если доступный квадрат один
+		//РёР· РґРѕСЃС‚СѓРїРЅС‹С… РєРІР°РґСЂР°С‚РѕРІ РІС‹Р±РёСЂР°РµРј СЃР»СѓС‡Р°Р№РЅРѕ
+		//РёР»Рё РЅРµ СЃР»СѓС‡Р°Р№РЅРѕ РµСЃР»Рё РґРѕСЃС‚СѓРїРЅС‹Р№ РєРІР°РґСЂР°С‚ РѕРґРёРЅ
 		BattleSquareIter itResult( ChooseIter(
 			ChooseIter( Find( x - 1, y ) , Find( x + 1, y ) ),
 			ChooseIter( Find( x, y - 1 ) , Find( x, y + 1 ) ))
@@ -201,23 +201,23 @@ BattleSquare* Computer::FetchNextSquare() {
 		squares_.erase( itResult );
 		return square;
 	}
-	//если попали более чем 1 раз
+	//РµСЃР»Рё РїРѕРїР°Р»Рё Р±РѕР»РµРµ С‡РµРј 1 СЂР°Р·
 	else {
-		//то нам известна ориентация корабля
+		//С‚Рѕ РЅР°Рј РёР·РІРµСЃС‚РЅР° РѕСЂРёРµРЅС‚Р°С†РёСЏ РєРѕСЂР°Р±Р»СЏ
 		ShipAlign align = lastShipSquares_[0]->GetShip()->GetAlign();
 
 		if ( align == saHorizontal ) {
 			int Y = lastShipSquares_[0]->Y();
 			int minX = lastShipSquares_[0]->X();
 			int maxX = 0;
-			//вычисляем Х-ы граничных квадратов
+			//РІС‹С‡РёСЃР»СЏРµРј РҐ-С‹ РіСЂР°РЅРёС‡РЅС‹С… РєРІР°РґСЂР°С‚РѕРІ
 			for ( BattleSquareConstIter it( lastShipSquares_.begin() ) ;
 				it != lastShipSquares_.end(); ++it ) {
 				maxX = std::max( (*it)->X(), maxX );
 				minX = std::min( (*it)->X(), minX );
 			}
-			//выбираем квадрат слева или справа случайно, либо тот который
-			//есть в списке
+			//РІС‹Р±РёСЂР°РµРј РєРІР°РґСЂР°С‚ СЃР»РµРІР° РёР»Рё СЃРїСЂР°РІР° СЃР»СѓС‡Р°Р№РЅРѕ, Р»РёР±Рѕ С‚РѕС‚ РєРѕС‚РѕСЂС‹Р№
+			//РµСЃС‚СЊ РІ СЃРїРёСЃРєРµ
 			BattleSquareIter itResult(
 				ChooseIter( Find( minX - 1, Y ), Find( maxX + 1, Y ) ) );
 			assert( itResult != squares_.end() );

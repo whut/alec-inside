@@ -1,4 +1,4 @@
-#ifndef utilsH
+п»ї#ifndef utilsH
 #define utilsH
 
 #include <ctime>
@@ -6,7 +6,7 @@
 #include <iostream>
 #include <string>
 
-//генерирует случайные числа в диапазоне [lowest,highest]
+//РіРµРЅРµСЂРёСЂСѓРµС‚ СЃР»СѓС‡Р°Р№РЅС‹Рµ С‡РёСЃР»Р° РІ РґРёР°РїР°Р·РѕРЅРµ [lowest,highest]
 int RandomRange( int lowest, int highest ) {
 	static bool called = false;
 	if ( !called ) {
@@ -16,15 +16,15 @@ int RandomRange( int lowest, int highest ) {
 	return lowest+int(((highest-lowest)+1)*std::rand()/(RAND_MAX + 1.0));
 }
 
-// удаляет объекта типа T
+// СѓРґР°Р»СЏРµС‚ РѕР±СЉРµРєС‚Р° С‚РёРїР° T
 template<class T> void wipe( T* ptr ) {
 	delete ptr;
 }
 
-//Консоль
+//РљРѕРЅСЃРѕР»СЊ
 class Console {
 	public:
-    	// запросить у пользоателя ввод
+    	// Р·Р°РїСЂРѕСЃРёС‚СЊ Сѓ РїРѕР»СЊР·РѕР°С‚РµР»СЏ РІРІРѕРґ
 		template<class T>
 		static T Request( const std::string& message ) {
 			std::cout << message;

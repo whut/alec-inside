@@ -1,4 +1,4 @@
-//---------------------------------------------------------------------------
+п»ї//---------------------------------------------------------------------------
 
 #ifndef PlayersH
 #define PlayersH
@@ -20,25 +20,25 @@ class Player {
 
 		Player();
 		virtual ~Player();
-		//расставить корабли
+		//СЂР°СЃСЃС‚Р°РІРёС‚СЊ РєРѕСЂР°Р±Р»Рё
 		virtual void BaseShips() = 0;
-		//кинуть бомбу
+		//РєРёРЅСѓС‚СЊ Р±РѕРјР±Сѓ
 		virtual bool DropBomb( const Player* enemy ) = 0;
-		// есть кто еще живой?
+		// РµСЃС‚СЊ РєС‚Рѕ РµС‰Рµ Р¶РёРІРѕР№?
 		bool HasLiveShips() const;
-		// поле боя
+		// РїРѕР»Рµ Р±РѕСЏ
 		Battlefield* Field() const { return bf; }
 	protected:
-		// список кораблей игрока
+		// СЃРїРёСЃРѕРє РєРѕСЂР°Р±Р»РµР№ РёРіСЂРѕРєР°
 		std::vector<Ship*> ships_;
-		//проверить не затоплен ли корабль
+		//РїСЂРѕРІРµСЂРёС‚СЊ РЅРµ Р·Р°С‚РѕРїР»РµРЅ Р»Рё РєРѕСЂР°Р±Р»СЊ
 		static void CheckShip( const Ship* s );
 	private:
-		//поле боя
+		//РїРѕР»Рµ Р±РѕСЏ
 		Battlefield* bf;
 };
 
-//Человек
+//Р§РµР»РѕРІРµРє
 class Human : public Player {
 	public:
 		void BaseShips();
@@ -48,27 +48,27 @@ class Human : public Player {
 		static int RequestCoordinate( int maxValue, std::string coordName );
 };
 
-//Компьютер
+//РљРѕРјРїСЊСЋС‚РµСЂ
 class Computer : public Player {
 	public:
-		//принимает спиок квадратов противника
+		//РїСЂРёРЅРёРјР°РµС‚ СЃРїРёРѕРє РєРІР°РґСЂР°С‚РѕРІ РїСЂРѕС‚РёРІРЅРёРєР°
 		Computer( Battlefield* enemyField );
 		void BaseShips();
 		bool DropBomb( const Player* enemy );
 	private:
-		//список необстрелянных квадратов противника
+		//СЃРїРёСЃРѕРє РЅРµРѕР±СЃС‚СЂРµР»СЏРЅРЅС‹С… РєРІР°РґСЂР°С‚РѕРІ РїСЂРѕС‚РёРІРЅРёРєР°
 		std::vector<BattleSquare*> squares_;
-		//список квадратов последнего обстрелянного корабля
+		//СЃРїРёСЃРѕРє РєРІР°РґСЂР°С‚РѕРІ РїРѕСЃР»РµРґРЅРµРіРѕ РѕР±СЃС‚СЂРµР»СЏРЅРЅРѕРіРѕ РєРѕСЂР°Р±Р»СЏ
 		std::vector<BattleSquare*> lastShipSquares_;
 
-		//удалить соседние клетки для square
+		//СѓРґР°Р»РёС‚СЊ СЃРѕСЃРµРґРЅРёРµ РєР»РµС‚РєРё РґР»СЏ square
 		void RemoveAdjacentSquares( BattleSquare* square );
-		//извлечь очередной квадрат из списка необстрелянных
+		//РёР·РІР»РµС‡СЊ РѕС‡РµСЂРµРґРЅРѕР№ РєРІР°РґСЂР°С‚ РёР· СЃРїРёСЃРєР° РЅРµРѕР±СЃС‚СЂРµР»СЏРЅРЅС‹С…
 		BattleSquare* FetchNextSquare();
-		// выбрать один из двух итераторов
+		// РІС‹Р±СЂР°С‚СЊ РѕРґРёРЅ РёР· РґРІСѓС… РёС‚РµСЂР°С‚РѕСЂРѕРІ
 		BattleSquareIter ChooseIter( BattleSquareIter it1,
 			BattleSquareIter it2 );
-		// найти итератор
+		// РЅР°Р№С‚Рё РёС‚РµСЂР°С‚РѕСЂ
 		BattleSquareIter Find( int x, int y );
 };
 

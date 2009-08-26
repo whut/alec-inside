@@ -1,4 +1,4 @@
-//---------------------------------------------------------------------------
+п»ї//---------------------------------------------------------------------------
 
 
 #include <algorithm>
@@ -31,19 +31,19 @@ bool BattleSquare::IsAdjacentStraight( const BattleSquare* other ) const {
 }
 
 ShootResult BattleSquare::DropBomb() {
-	//если уже стреляли
+	//РµСЃР»Рё СѓР¶Рµ СЃС‚СЂРµР»СЏР»Рё
 	if ( bombed_ ) {
-		//то не надо тратить патроны
+		//С‚Рѕ РЅРµ РЅР°РґРѕ С‚СЂР°С‚РёС‚СЊ РїР°С‚СЂРѕРЅС‹
 		return srAgain;
 	}
 	bombed_ = true;
-	// если есть корабль
+	// РµСЃР»Рё РµСЃС‚СЊ РєРѕСЂР°Р±Р»СЊ
 	if ( HasShip() ) {
-		// разрушить палубу
+		// СЂР°Р·СЂСѓС€РёС‚СЊ РїР°Р»СѓР±Сѓ
 		ship_->DestroyDeck();
 		return srSuccess;
 	}
-	//мимо
+	//РјРёРјРѕ
 	return srEmpty;
 }
 
@@ -51,7 +51,7 @@ ShootResult BattleSquare::DropBomb() {
 //--- BattleField ---
 Battlefield::Battlefield( int rowCount, int columnCount ) :
 	rowCount_( rowCount ), columnCount_( columnCount ) {
-	//создаем Квадраты
+	//СЃРѕР·РґР°РµРј РљРІР°РґСЂР°С‚С‹
 	for ( int squareIndex = 0; squareIndex < rowCount_ * columnCount_;
 		  ++squareIndex ) {
 
@@ -61,7 +61,7 @@ Battlefield::Battlefield( int rowCount, int columnCount ) :
 }
 
 Battlefield::~Battlefield() {
-	// удаляем Квадраты
+	// СѓРґР°Р»СЏРµРј РљРІР°РґСЂР°С‚С‹
 	std::for_each( squares_.begin(), squares_.end(), wipe<BattleSquare> );
 }
 
@@ -74,20 +74,20 @@ ShootResult Battlefield::DropBomb( int x, int y ) {
 }
 
 bool Battlefield::BaseShip( int x, int y, Ship* s ) {
-	//итератор носа корабля
+	//РёС‚РµСЂР°С‚РѕСЂ РЅРѕСЃР° РєРѕСЂР°Р±Р»СЏ
 	BattleSquareConstIter headSquareIt( GetSquare( x, y ) );
-	//если нельзя разместить корабль
+	//РµСЃР»Рё РЅРµР»СЊР·СЏ СЂР°Р·РјРµСЃС‚РёС‚СЊ РєРѕСЂР°Р±Р»СЊ
 	if ( !AllowBaseShip( s, headSquareIt ) ) {
 		return false;
 	}
 
-	//шаг итератора
+	//С€Р°Рі РёС‚РµСЂР°С‚РѕСЂР°
 	int step = ( s->GetAlign() == saHorizontal ? 1 : columnCount_ );
-	//страховка от выхода за допустимый интервал
+	//СЃС‚СЂР°С…РѕРІРєР° РѕС‚ РІС‹С…РѕРґР° Р·Р° РґРѕРїСѓСЃС‚РёРјС‹Р№ РёРЅС‚РµСЂРІР°Р»
 	assert( squares_.size() > ( x + columnCount_ * y ) +
 		( s->DeckCount() - 1 ) * step );
 
-	//размещаем корабль по квадратам
+	//СЂР°Р·РјРµС‰Р°РµРј РєРѕСЂР°Р±Р»СЊ РїРѕ РєРІР°РґСЂР°С‚Р°Рј
 	BattleSquareConstIter it( headSquareIt );
 	for( int deckIndex = 0; deckIndex < s->DeckCount();
 		++deckIndex, it += step ) {
@@ -111,24 +111,24 @@ BattleSquareConstIter Battlefield::GetSquare( int x, int y) const {
 bool Battlefield::AllowBaseShip( const Ship* s,
 	BattleSquareConstIter headSquareIter ) const {
 
-	//входит ли корма в поле боя
+	//РІС…РѕРґРёС‚ Р»Рё РєРѕСЂРјР° РІ РїРѕР»Рµ Р±РѕСЏ
 	int shipSternX = s->Width() + (*headSquareIter)->X() - 1;
 	int shipSternY = s->Height() + (*headSquareIter)->Y() - 1;
 	if ( !SquareExists( shipSternX , shipSternY ) ) {
 		return false;
 	}
 
-	//есть ли в зоне размещения корабли
+	//РµСЃС‚СЊ Р»Рё РІ Р·РѕРЅРµ СЂР°Р·РјРµС‰РµРЅРёСЏ РєРѕСЂР°Р±Р»Рё
 
-	//шаг итератора
+	//С€Р°Рі РёС‚РµСЂР°С‚РѕСЂР°
 	int step = ( s->GetAlign() == saHorizontal ? 1 : columnCount_ );
-	//страховка от выхода за допустимый интервал
+	//СЃС‚СЂР°С…РѕРІРєР° РѕС‚ РІС‹С…РѕРґР° Р·Р° РґРѕРїСѓСЃС‚РёРјС‹Р№ РёРЅС‚РµСЂРІР°Р»
 	assert( squares_.size() >
 		( (*headSquareIter)->X() + columnCount_ * (*headSquareIter)->Y() ) +
 			( s->DeckCount() - 1 ) * step
 	);
 
-	//ищем квадраты с кораблями в зоне размещения
+	//РёС‰РµРј РєРІР°РґСЂР°С‚С‹ СЃ РєРѕСЂР°Р±Р»СЏРјРё РІ Р·РѕРЅРµ СЂР°Р·РјРµС‰РµРЅРёСЏ
 	BattleSquareConstIter it( headSquareIter );
 	for( int deckIndex = 0; deckIndex < s->DeckCount();
 		++deckIndex, it += step ) {

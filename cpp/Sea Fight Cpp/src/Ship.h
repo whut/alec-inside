@@ -1,56 +1,56 @@
-#ifndef shipH
+п»ї#ifndef shipH
 #define shipH
 
-// Тип ориентации корабля
+// РўРёРї РѕСЂРёРµРЅС‚Р°С†РёРё РєРѕСЂР°Р±Р»СЏ
 enum ShipAlign { saHorizontal, saVertical };
 
-// Корабль
+// РљРѕСЂР°Р±Р»СЊ
 class Ship {
 	public:
 		/*
-		   deckCount - число палуб;
-		   align - ориентация корабля
+		   deckCount - С‡РёСЃР»Рѕ РїР°Р»СѓР±;
+		   align - РѕСЂРёРµРЅС‚Р°С†РёСЏ РєРѕСЂР°Р±Р»СЏ
 		*/
 		Ship( int deckCount, ShipAlign align = saHorizontal ) :
 			deckCount_( deckCount ), liveDeckCount_( deckCount ),
 			align_( align )  {
 		}
-		// число палуб корабля
+		// С‡РёСЃР»Рѕ РїР°Р»СѓР± РєРѕСЂР°Р±Р»СЏ
 		int DeckCount() const {
 			return deckCount_;
 		}
-		// возвращает ориентацию корабля
+		// РІРѕР·РІСЂР°С‰Р°РµС‚ РѕСЂРёРµРЅС‚Р°С†РёСЋ РєРѕСЂР°Р±Р»СЏ
 		ShipAlign GetAlign() const {
 			return align_;
 		}
-		// устанавливает ориентацию корабля
+		// СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ РѕСЂРёРµРЅС‚Р°С†РёСЋ РєРѕСЂР°Р±Р»СЏ
 		void SetAlign( ShipAlign align ) {
 			align_ = align;
 		}
-		// число клеток занимаемых кораблем по горизонали
+		// С‡РёСЃР»Рѕ РєР»РµС‚РѕРє Р·Р°РЅРёРјР°РµРјС‹С… РєРѕСЂР°Р±Р»РµРј РїРѕ РіРѕСЂРёР·РѕРЅР°Р»Рё
 		int Width() const {
 			return ( align_ == saHorizontal ? deckCount_ : 1 );
 		}
-		// число клеток занимаемых кораблем по вертикали
+		// С‡РёСЃР»Рѕ РєР»РµС‚РѕРє Р·Р°РЅРёРјР°РµРјС‹С… РєРѕСЂР°Р±Р»РµРј РїРѕ РІРµСЂС‚РёРєР°Р»Рё
 		int Height() const {
 			return ( align_ == saVertical ? deckCount_ : 1 );
 		}
-		// корабль "жив" или затоплен
+		// РєРѕСЂР°Р±Р»СЊ "Р¶РёРІ" РёР»Рё Р·Р°С‚РѕРїР»РµРЅ
 		bool IsLive() const {
 			return liveDeckCount_ > 0;
 		}
-		// уничтожить палубу
+		// СѓРЅРёС‡С‚РѕР¶РёС‚СЊ РїР°Р»СѓР±Сѓ
 		void DestroyDeck() {
 			--liveDeckCount_;
         }
 	private:
-		// палубы корабля
+		// РїР°Р»СѓР±С‹ РєРѕСЂР°Р±Р»СЏ
 		int deckCount_;
-		// живые палубы
+		// Р¶РёРІС‹Рµ РїР°Р»СѓР±С‹
 		int liveDeckCount_;
-		// ориентация корабля
+		// РѕСЂРёРµРЅС‚Р°С†РёСЏ РєРѕСЂР°Р±Р»СЏ
 		ShipAlign align_;
-		// копирование не требуется
+		// РєРѕРїРёСЂРѕРІР°РЅРёРµ РЅРµ С‚СЂРµР±СѓРµС‚СЃСЏ
 		Ship( const Ship& other );
 		Ship& operator=( const Ship& );
 };
