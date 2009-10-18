@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using CSharpParser.Base;
 
 namespace CSharpParser {
 	/// <summary>
@@ -12,15 +13,15 @@ namespace CSharpParser {
 			}
 		}
 
-		public override void Collect( TextReader reader ) {
-			if ( reader.Peek() == '"' ) {
-				reader.Read(); // skip start quote
+		public override void Collect( Context context ) {
+			if ( context.Reader.Peek() == '"' ) {
+				context.Reader.Read(); // skip start quote
 				int currentSymbol;
 				do {
-					currentSymbol = reader.Read();
+					currentSymbol = context.Reader.Read();
 					// skip escaped quote
-					if ( currentSymbol == '"' && reader.Peek() == '"' ) {
-						reader.Read();
+					if ( currentSymbol == '"' && context.Reader.Peek() == '"' ) {
+						context.Reader.Read();
 						currentSymbol = 0;
 					}
 				} 

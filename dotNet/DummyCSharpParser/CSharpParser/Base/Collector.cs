@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using CSharpParser.Base;
 
 namespace CSharpParser {
 	/// <summary>
@@ -16,6 +17,6 @@ namespace CSharpParser {
 		/// Collect a series of characters.
 		/// </summary>
 		/// <param name="reader"></param>
-		public abstract void Collect( TextReader reader );
+		public abstract void Collect( Context context );
 	}
 }

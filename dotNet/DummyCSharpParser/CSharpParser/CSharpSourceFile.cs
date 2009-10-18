@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using CSharpParser.Base;
 
 namespace CSharpParser {
 	/// <summary>
@@ -14,15 +15,10 @@ namespace CSharpParser {
 		/// <param name="fileName">The complete file path.</param>
 		public CSharpSourceFile( string fileName ) {
 			this.fileName = fileName;
-			RegisterCollector( new Comment() );
+			RegisterCollector( new CommentCollector() );
 			RegisterCollector( new RegularStringLiteral() );
 			RegisterCollector( new VerbatimStringLiteral() );
-
-			RegisterCollector(
-				new ColonCollector( 
-					new Dictionary<int, Collector>( collectors ) 
-				) 
-			);
+			
 		}
 		/// <summary>
 		/// Returns numbers of classes and structs definitions.
@@ -53,11 +49,13 @@ namespace CSharpParser {
 		/// Parse file with source code.
 		/// </summary>
 		private void Process() {
-			using ( StreamReader reader = new StreamReader( fileName ) ) {
-				StringBuilder token = new StringBuilder();
+			using ( var reader = new StreamReader( fileName ) ) {
+				var context = new Context( reader, new CSharpElement(), collectors );
+
+				var token = new StringBuilder();
 				int currentSymbol;
 				while ( ( currentSymbol = reader.Read() ) >= 0 ) {
-					if ( IsIdentifierOrKeyword( (char)currentSymbol, reader.Peek() ) ) {
+					if ( context.ElementTester.IsIdentifierOrKeyword( currentSymbol, reader.Peek() ) ) {
 						token.Append( (char)currentSymbol );
 						continue;
 					}
@@ -67,7 +65,7 @@ namespace CSharpParser {
 					}
 
 					if ( collectors.ContainsKey( currentSymbol ) ) {
-						collectors[ currentSymbol ].Collect( reader );
+						collectors[ currentSymbol ].Collect( context );
 					}
 				}
 			}
@@ -85,16 +83,7 @@ namespace CSharpParser {
 			}
 		}
 
-		/// <summary>
-		/// Indicates whether the specified Unicode character is categorized as a part of C# identifier
-		/// or keyword. 
-		/// </summary>
-		/// <param name="symbol">A Unicode character.</param>
-		/// <param name="nextSymbol">A next Unicode character.</param>
-		private static bool IsIdentifierOrKeyword( char symbol, int nextSymbol ) {
-			return Char.IsLetterOrDigit( symbol ) || symbol == '_' ||
-				( symbol == '@' && nextSymbol != '"' );
-		}
+
 
 		private bool processed;
 		private int classTokenCount;
