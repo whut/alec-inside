@@ -1,8 +1,7 @@
 ﻿using System;
-using CSharpParser.Base;
 
-namespace CSharpParser {
-	public class CSharpElement : ILangElement {
+namespace CXParser {
+	public class CSharpSymbol : ILangSymbol {
 		/// <summary>
 		/// Indicates whether that the specified character is line terminator.
 		/// </summary>

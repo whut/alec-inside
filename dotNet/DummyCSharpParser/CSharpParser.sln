@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpParser", "CSharpParser\CSharpParser.csproj", "{56FB7E61-82B1-4D54-9EFD-F68EF73BECDE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CXParser", "CSharpParser\CXParser.csproj", "{56FB7E61-82B1-4D54-9EFD-F68EF73BECDE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassCounter", "ClassCounter\ClassCounter.csproj", "{42A855D2-DB38-4160-A4EF-B61BCDF2658C}"
 EndProject

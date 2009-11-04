@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
-using CSharpParser.Base;
+using CXParser.Collectors;
 
-namespace CSharpParser {
+
+namespace CXParser {
 	/// <summary>
 	/// Represents a C# source code file.
 	/// </summary>
@@ -15,27 +15,20 @@ namespace CSharpParser {
 		/// <param name="fileName">The complete file path.</param>
 		public CSharpSourceFile( string fileName ) {
 			this.fileName = fileName;
-			RegisterCollector( new CommentCollector() );
-			RegisterCollector( new RegularStringLiteral() );
-			RegisterCollector( new VerbatimStringLiteral() );
-			
-		}
-		/// <summary>
-		/// Returns numbers of classes and structs definitions.
-		/// </summary>
-		/// <returns></returns>
-		public int GetClassCount() {
-			if ( !processed ) {
-				Process();
-			}
-			return classTokenCount;
-		}
+			Register( new CommentCollector() );
+			Register( new RegularStringLiteralCollector() );
+			Register( new VerbatimStringLiteralCollector() );
+			Register( new ColonCollector() );
+			Register( new OpenBlockCollector() );
+			Register( new CloseBlockCollector() );
 
-		/// <summary>
-		/// Register collector in collectors collection.
-		/// </summary>
-		/// <param name="collector"></param>
-		private void RegisterCollector( Collector collector ) {
+			Register( new NamespaceProcessor() );
+			Register( new ClassProcessor( classesRegistry ) );
+			Register( new StructProcessor( classesRegistry ) );
+		}
+		
+
+		public void Register( ICollector collector ) {
 			if ( collectors.ContainsKey( collector.ListenFor ) ) {
 				throw new ArgumentException(
 					String.Format( "Duplicate collector. Collector with ListenFor character '{0}' already registered.",
@@ -45,49 +38,53 @@ namespace CSharpParser {
 			collectors.Add( collector.ListenFor, collector );
 		}
 
+		public void Register( ITokenProcessor processor ) {
+			if ( tokenProcessors.ContainsKey( processor.Token ) ) {
+				throw new ArgumentException(
+					String.Format( "Duplicate processor. Processor for token '{0}' already registered.",
+						processor.Token )
+				);
+			}
+			tokenProcessors.Add( processor.Token, processor );
+		}
+
+
 		/// <summary>
 		/// Parse file with source code.
 		/// </summary>
-		private void Process() {
+		private void Parse() {
 			using ( var reader = new StreamReader( fileName ) ) {
-				var context = new Context( reader, new CSharpElement(), collectors );
-
-				var token = new StringBuilder();
-				int currentSymbol;
-				while ( ( currentSymbol = reader.Read() ) >= 0 ) {
-					if ( context.ElementTester.IsIdentifierOrKeyword( currentSymbol, reader.Peek() ) ) {
-						token.Append( (char)currentSymbol );
-						continue;
-					}
-					if ( token.Length > 0 ) {
-						ProcessToken( token.ToString() );
-						token.Length = 0;
-					}
-
-					if ( collectors.ContainsKey( currentSymbol ) ) {
-						collectors[ currentSymbol ].Collect( context );
+				var context = new Context( reader, new CSharpSymbol(), collectors );				
+				string token;
+				while ( ( token = context.ReadNextToken() ) != null ) {
+					ITokenProcessor processor;
+					if ( tokenProcessors.TryGetValue( token, out processor ) ) {
+						processor.Process( context );
 					}
 				}
 			}
 			processed = true;
 		}
 
-		/// <summary>
-		/// Analyze token.
-		/// </summary>		
-		private void ProcessToken( string token ) {
-			if ( String.CompareOrdinal( token, "class" ) == 0 ||
-				String.CompareOrdinal( token, "struct" ) == 0 ) {
+		
 
-				++classTokenCount;
+		/// <summary>
+		/// Returns numbers of classes and structs definitions.
+		/// </summary>
+		/// <returns></returns>
+		public int GetClassCount() {
+			if ( !processed ) {
+				Parse();
 			}
+			return classesRegistry.Count;
 		}
 
-
-
 		private bool processed;
-		private int classTokenCount;
-		private Dictionary<int, Collector> collectors = new Dictionary<int, Collector>();
+		private HashSet<string> classesRegistry = new HashSet<string>();
+		private Dictionary<int, ICollector> collectors = 
+			new Dictionary<int, ICollector>();
+		private Dictionary<string, ITokenProcessor> tokenProcessors = 
+			new Dictionary<string, ITokenProcessor>();
 		private string fileName;
 	}
 

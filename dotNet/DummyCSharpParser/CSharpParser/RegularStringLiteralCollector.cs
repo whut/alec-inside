@@ -1,18 +1,16 @@
 ﻿using System;
-using System.IO;
-using CSharpParser.Base;
 
-namespace CSharpParser {
+namespace CXParser.Collectors {
 	/// <summary>
 	/// Represents a collector that can collect a regular string literal.
 	/// </summary>
-	public sealed class RegularStringLiteral : Collector {
-		public override int ListenFor {
+	public sealed class RegularStringLiteralCollector : ICollector {
+		public int ListenFor {
 			get {
 				return '"';
 			}
 		}
-		public override void Collect( Context context ) {
+		public void Collect( Context context ) {
 			int currentSymbol;
 			do {
 				currentSymbol = context.Reader.Read();

@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace CSharpParser.Base {
-	public interface ILangElement {
+namespace CXParser {
+	public interface ILangSymbol {
 		/// <summary>
 		/// Indicates whether that the specified character is line terminator.
 		/// </summary>

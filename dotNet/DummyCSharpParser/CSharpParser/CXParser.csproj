@@ -8,8 +8,8 @@
     <ProjectGuid>{56FB7E61-82B1-4D54-9EFD-F68EF73BECDE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CSharpParser</RootNamespace>
-    <AssemblyName>CSharpParser</AssemblyName>
+    <RootNamespace>CXParser</RootNamespace>
+    <AssemblyName>CXParser</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -39,16 +39,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Base\Collector.cs" />
+    <Compile Include="Base\ITokenProcessor.cs" />
+    <Compile Include="Base\ICollector.cs" />
     <Compile Include="Base\Context.cs" />
-    <Compile Include="Base\ILangElement.cs" />
+    <Compile Include="Base\Defines.cs" />
+    <Compile Include="Base\ILangSymbol.cs" />
     <Compile Include="ColonCollector.cs" />
+    <Compile Include="CloseBlockCollector.cs" />
+    <Compile Include="ClassProcessor.cs" />
+    <Compile Include="StructProcessor.cs" />
+    <Compile Include="NamespaceProcessor.cs" />
+    <Compile Include="OpenBlockCollector.cs" />
     <Compile Include="CSharpSourceFile.cs" />
-    <Compile Include="CSharpElement.cs" />
+    <Compile Include="CSharpSymbol.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CommentCollector.cs" />
-    <Compile Include="RegularStringLiteral.cs" />
-    <Compile Include="VerbatimStringLiteral.cs" />
+    <Compile Include="RegularStringLiteralCollector.cs" />
+    <Compile Include="VerbatimStringLiteralCollector.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

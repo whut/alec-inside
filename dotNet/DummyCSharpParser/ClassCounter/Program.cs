@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.IO;
-using CSharpParser;
+
+using CXParser;
 
 namespace ClassCounter {
 	class Program {
@@ -20,7 +19,10 @@ namespace ClassCounter {
 			
 			if ( sourceFile.Exists ) {
 				CSharpSourceFile cs = new CSharpSourceFile( sourceFile.FullName );				
-				Console.WriteLine( String.Format( "File contains {0} classes and structs.", cs.GetClassCount() ) );
+				Console.WriteLine( string.Format( 
+					"File contains {0} classes and structs.",
+					cs.GetClassCount() ) 
+				);
 			}
 			else {
 				Console.WriteLine( "Sorry, file not found." );

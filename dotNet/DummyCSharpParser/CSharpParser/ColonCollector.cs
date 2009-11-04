@@ -1,21 +1,18 @@
 ﻿using System;
-using System.IO;
-using System.Collections.Generic;
-using CSharpParser.Base;
 
-namespace CSharpParser {
+namespace CXParser.Collectors {
 	/// <summary>
 	/// Represents a collector that can collect "where T : class".
 	/// </summary>
-	public sealed class ColonCollector : Collector {
+	public sealed class ColonCollector : ICollector {
 		
-		public override int ListenFor {
+		public int ListenFor {
 			get {
 				return ':';
 			}
 		}
 
-		public override void Collect( Context context ) {
+		public void Collect( Context context ) {
 			int currentSymbol;
 			do {
 				currentSymbol = context.Reader.Read();
@@ -23,7 +20,8 @@ namespace CSharpParser {
 					context.Collectors[ currentSymbol ].Collect( context );
 				}
 			}
-			while ( currentSymbol >= 0 && !IsStopSymbol( currentSymbol ) );
+			while ( currentSymbol >= 0 && 
+				!IsStopSymbol( context.Reader.Peek() ) );
 		}
 
 		private bool IsStopSymbol( int symbol ) {

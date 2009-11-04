@@ -1,27 +1,25 @@
 ﻿using System;
-using System.IO;
-using CSharpParser.Base;
 
-namespace CSharpParser {
+namespace CXParser.Collectors {
 	/// <summary>
 	/// Represents a collector that can collect comment.
 	/// </summary>
-	public class CommentCollector : Collector {
+	public class CommentCollector : ICollector {
 
-		public override int ListenFor {
+		public int ListenFor {
 			get {
 				return '/';
 			}
 		}
 
-		public override void Collect( Context context ) {
-			int next = context.Reader.Peek();
-			var isEndOfComment = GetEndOfCommentCondition( next );
+		public void Collect( Context context ) {
+			int nextSymbol = context.Reader.Peek();
+			var isEndOfComment = GetEndOfCommentCondition( nextSymbol );
 
 			if ( isEndOfComment == null ) {
 				return;
 			}
-			
+			 
 			int currentSymbol;
 			do {
 				currentSymbol = context.Reader.Read();
@@ -32,7 +30,7 @@ namespace CSharpParser {
 			switch ( secondSymbol ) {
 				case '/':
 					return ( ( context, symbol ) =>
-						context.ElementTester.IsLineTerminator( symbol ) );
+						context.SymbolTester.IsLineTerminator( symbol ) );
 				case '*':
 					return ( ( context, symbol ) =>
 						symbol == '*' && context.Reader.Peek() == '/' );

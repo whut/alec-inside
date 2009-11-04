@@ -46,9 +46,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CSharpParser\CSharpParser.csproj">
+    <ProjectReference Include="..\CSharpParser\CXParser.csproj">
       <Project>{56FB7E61-82B1-4D54-9EFD-F68EF73BECDE}</Project>
-      <Name>CSharpParser</Name>
+      <Name>CXParser</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

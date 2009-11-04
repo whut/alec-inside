@@ -1,19 +1,18 @@
 ﻿using System;
-using System.IO;
-using CSharpParser.Base;
 
-namespace CSharpParser {
+
+namespace CXParser.Collectors {
 	/// <summary>
 	/// Represents a collector that can collect a verbatim string literal.
 	/// </summary>
-	public sealed class VerbatimStringLiteral : Collector {
-		public override int ListenFor {
+	public sealed class VerbatimStringLiteralCollector : ICollector {
+		public int ListenFor {
 			get {
 				return '@';
 			}
 		}
 
-		public override void Collect( Context context ) {
+		public void Collect( Context context ) {
 			if ( context.Reader.Peek() == '"' ) {
 				context.Reader.Read(); // skip start quote
 				int currentSymbol;
