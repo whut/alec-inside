@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using CXParser.Collectors;
 
 
@@ -9,8 +10,17 @@ namespace CXParser {
 	/// Represents a C# source code file.
 	/// </summary>
 	public sealed class CSharpSourceFile {
+		private bool processed;
+		private HashSet<string> classesRegistry = new HashSet<string>();
+		private Dictionary<int, ICollector> collectors =
+			new Dictionary<int, ICollector>();
+		private Dictionary<string, ITokenProcessor> tokenProcessors =
+			new Dictionary<string, ITokenProcessor>();
+		private string fileName;
+
 		/// <summary>
-		/// Initializes a new instance of the <see cref="CSharpSourceFile"/> class for the specified file name.
+		/// Initializes a new instance of the <see cref="CSharpSourceFile"/> 
+		/// class for the specified file name.
 		/// </summary>
 		/// <param name="fileName">The complete file path.</param>
 		public CSharpSourceFile( string fileName ) {
@@ -31,7 +41,8 @@ namespace CXParser {
 		public void Register( ICollector collector ) {
 			if ( collectors.ContainsKey( collector.ListenFor ) ) {
 				throw new ArgumentException(
-					String.Format( "Duplicate collector. Collector with ListenFor character '{0}' already registered.",
+					String.Format( @"Duplicate collector. Collector with 
+						ListenFor character '{0}' already registered.",
 						collector.ListenFor )
 				);
 			}
@@ -41,7 +52,8 @@ namespace CXParser {
 		public void Register( ITokenProcessor processor ) {
 			if ( tokenProcessors.ContainsKey( processor.Token ) ) {
 				throw new ArgumentException(
-					String.Format( "Duplicate processor. Processor for token '{0}' already registered.",
+					String.Format( @"Duplicate processor. Processor for 
+						token '{0}' already registered.",
 						processor.Token )
 				);
 			}
@@ -54,9 +66,12 @@ namespace CXParser {
 		/// </summary>
 		private void Parse() {
 			using ( var reader = new StreamReader( fileName ) ) {
-				var context = new Context( reader, new CSharpSymbol(), collectors );				
-				string token;
-				while ( ( token = context.ReadNextToken() ) != null ) {
+				var context = new Context( reader, collectors, new CSharpTokenizer() );
+
+				for ( string token = context.ReadNextToken(); 
+					token != null; 
+					token = context.ReadNextToken() ) {
+
 					ITokenProcessor processor;
 					if ( tokenProcessors.TryGetValue( token, out processor ) ) {
 						processor.Process( context );
@@ -69,23 +84,17 @@ namespace CXParser {
 		
 
 		/// <summary>
-		/// Returns numbers of classes and structs definitions.
+		/// Returns names of classes and structs definitions.
 		/// </summary>
 		/// <returns></returns>
-		public int GetClassCount() {
+		public string[] GetClasses() {
 			if ( !processed ) {
 				Parse();
 			}
-			return classesRegistry.Count;
+			return classesRegistry.ToArray();
 		}
 
-		private bool processed;
-		private HashSet<string> classesRegistry = new HashSet<string>();
-		private Dictionary<int, ICollector> collectors = 
-			new Dictionary<int, ICollector>();
-		private Dictionary<string, ITokenProcessor> tokenProcessors = 
-			new Dictionary<string, ITokenProcessor>();
-		private string fileName;
+	
 	}
 
 

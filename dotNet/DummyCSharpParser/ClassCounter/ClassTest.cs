@@ -54,8 +54,8 @@ namespace ClassCounter {
 			public partial class InnerAbc {
 				//nothing
 			}
-
-			public struct MotherNight {
+			//10
+			public struct MotherNight<Brasil> {
 				/*Read It*/
 				private int readers;//
 			}
@@ -96,15 +96,22 @@ namespace ClassCounter {
 		}
 
 	}
-
-	public abstract class Generic/*555*/<G,/*44*/t> {
+	//11
+	public abstract partial class Generic/*555*/<G,/*44*/t> {
 		G x;
 		public abstract int X();
 	}
-
+	//12
 	public abstract class Generic //12121
 		<G, t, Z> {
 
 		public abstract int X();
 	}
-}  
+}
+namespace ClassCounter {
+	//11
+	public abstract partial class Generic/*555*/<G,/*,,*/t> {
+		
+		
+	}
+}

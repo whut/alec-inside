@@ -2,17 +2,23 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace CXParser {
 	public class Context {
-		public Context( TextReader reader, ILangSymbol elementTester,
-			Dictionary<int, ICollector> collectors ) {
+		private ITokenizer tokenizer;
+		private Dictionary<int, ICollector> collectors;
+		private Stack<string> openedBlocks = new Stack<string>();
+		private bool namedBlockOpened;
+
+
+		public Context( TextReader reader,
+			Dictionary<int, ICollector> collectors,
+			ITokenizer tokenizer ) {
 
 			Reader = reader;
-			SymbolTester = elementTester;
-			Collectors = collectors;
-			Defines = new Defines();
+			this.collectors = collectors;
+			this.tokenizer = tokenizer;
+			//Defines = new Defines();
 		}
 
 		public TextReader Reader {
@@ -20,23 +26,13 @@ namespace CXParser {
 			private set;
 		}
 
-		public ILangSymbol SymbolTester {
-			get;
-			private set;
-		}
-
-		public Dictionary<int, ICollector> Collectors {
-			get;
-			private set;
-		}
-
+		/*
 		public Defines Defines {
 			get;
 			private set;
-		}
+		}  */
 
-		private Stack<string> openedBlocks = new Stack<string>();
-		private bool namedBlockOpened;
+				
 		public void OpenBlock() {
 			if ( namedBlockOpened ) {
 				namedBlockOpened = false;
@@ -44,6 +40,7 @@ namespace CXParser {
 			}
 			openedBlocks.Push( null );
 		}
+
 		public void OpenBlock( string name ) {
 			namedBlockOpened = true;
 			openedBlocks.Push( name );
@@ -63,27 +60,15 @@ namespace CXParser {
 			return string.Join( ".", names );
 		}
 
-		public string ReadNextToken() {
-			var token = new StringBuilder();
-			int currentSymbol;
-			while ( ( currentSymbol = Reader.Read() ) >= 0 ) {
-				if ( SymbolTester.IsIdentifierOrKeyword(
-					currentSymbol, Reader.Peek() ) ) {
-
-					token.Append( Convert.ToChar( currentSymbol ) );
-					continue;
-				}
-
-				ICollector collector;
-				if ( Collectors.TryGetValue( currentSymbol, out collector ) ) {
-					collector.Collect( this );
-				}
-
-				if ( token.Length > 0 ) {
-					return token.ToString();
-				}
+		public void Collect( int currentSymbol ) {
+			ICollector collector;
+			if ( collectors.TryGetValue( currentSymbol, out collector ) ) {
+				collector.Collect( this );
 			}
-			return null;
+		}
+
+		public string ReadNextToken() {
+			return tokenizer.ReadNext( this );
 		}
 
 	}

@@ -23,9 +23,9 @@ namespace CXParser.Collectors {
 						context.Reader.Read();
 						currentSymbol = 0;
 					}
-				} 
+				}
 				while ( currentSymbol >= 0 && currentSymbol != '"' );
-			}
+			}			
 		}
 	}
 }

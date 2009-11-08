@@ -39,23 +39,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base\ITokenizer.cs" />
     <Compile Include="Base\ITokenProcessor.cs" />
     <Compile Include="Base\ICollector.cs" />
     <Compile Include="Base\Context.cs" />
     <Compile Include="Base\Defines.cs" />
-    <Compile Include="Base\ILangSymbol.cs" />
-    <Compile Include="ColonCollector.cs" />
-    <Compile Include="CloseBlockCollector.cs" />
-    <Compile Include="ClassProcessor.cs" />
-    <Compile Include="StructProcessor.cs" />
-    <Compile Include="NamespaceProcessor.cs" />
-    <Compile Include="OpenBlockCollector.cs" />
+    <Compile Include="Collectors\ColonCollector.cs" />
+    <Compile Include="Collectors\CloseBlockCollector.cs" />
+    <Compile Include="CSharpTokenizer.cs" />
+    <Compile Include="Processors\ClassProcessor.cs" />
+    <Compile Include="Processors\StructProcessor.cs" />
+    <Compile Include="Processors\NamespaceProcessor.cs" />
+    <Compile Include="Collectors\OpenBlockCollector.cs" />
     <Compile Include="CSharpSourceFile.cs" />
-    <Compile Include="CSharpSymbol.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="CommentCollector.cs" />
-    <Compile Include="RegularStringLiteralCollector.cs" />
-    <Compile Include="VerbatimStringLiteralCollector.cs" />
+    <Compile Include="Collectors\CommentCollector.cs" />
+    <Compile Include="Collectors\RegularStringLiteralCollector.cs" />
+    <Compile Include="Collectors\VerbatimStringLiteralCollector.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

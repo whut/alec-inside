@@ -18,8 +18,9 @@ namespace CXParser.Collectors {
 				if ( currentSymbol == '\\' && context.Reader.Peek() == '"' ) {
 					context.Reader.Read();
 				}
-			} 
-			while ( currentSymbol >= 0 && currentSymbol != '"' );
+			}
+			while ( currentSymbol >= 0 && currentSymbol != '"' );		
 		}
+		
 	}
 }
