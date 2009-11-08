@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 
 namespace CXParser {
+	/// <summary>
+	/// Processor for 'class' token
+	/// </summary>
 	public class ClassProcessor : ITokenProcessor {
 
 		private HashSet<string> classesRegistry;

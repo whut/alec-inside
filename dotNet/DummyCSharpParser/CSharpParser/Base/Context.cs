@@ -4,6 +4,9 @@ using System.IO;
 using System.Linq;
 
 namespace CXParser {
+	/// <summary>
+	/// Parsed unit context
+	/// </summary>
 	public class Context {
 		private ITokenizer tokenizer;
 		private Dictionary<int, ICollector> collectors;
@@ -18,21 +21,13 @@ namespace CXParser {
 			Reader = reader;
 			this.collectors = collectors;
 			this.tokenizer = tokenizer;
-			//Defines = new Defines();
 		}
 
 		public TextReader Reader {
 			get;
 			private set;
 		}
-
-		/*
-		public Defines Defines {
-			get;
-			private set;
-		}  */
-
-				
+	
 		public void OpenBlock() {
 			if ( namedBlockOpened ) {
 				namedBlockOpened = false;
@@ -60,9 +55,9 @@ namespace CXParser {
 			return string.Join( ".", names );
 		}
 
-		public void Collect( int currentSymbol ) {
+		public void Collect( int symbol ) {
 			ICollector collector;
-			if ( collectors.TryGetValue( currentSymbol, out collector ) ) {
+			if ( collectors.TryGetValue( symbol, out collector ) ) {
 				collector.Collect( this );
 			}
 		}
