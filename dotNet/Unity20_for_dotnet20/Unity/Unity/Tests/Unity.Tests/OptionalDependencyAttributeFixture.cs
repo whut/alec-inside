@@ -10,7 +10,7 @@
 //===============================================================================
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
+
 
 namespace Microsoft.Practices.Unity.Tests
 {
@@ -28,7 +28,7 @@ namespace Microsoft.Practices.Unity.Tests
             Assert.IsNull(result.SomeInterface);
         }
 
-        [TestMethod]
+       /* [TestMethod]
         public void OptionalDependencyParameterIsResolvedIfRegisteredInContainer()
         {
             ISomeInterface expectedSomeInterface = new Mock<ISomeInterface>().Object;
@@ -54,7 +54,7 @@ namespace Microsoft.Practices.Unity.Tests
 
             Assert.AreSame(namedSomeInterface, result.SomeInterface);
         }
-
+        */
         [TestMethod]
         public void OptionalPropertiesGetNullWhenNotConfigured()
         {
@@ -65,7 +65,7 @@ namespace Microsoft.Practices.Unity.Tests
             Assert.IsNull(result.SomeInterface);
         }
 
-        [TestMethod]
+       /* [TestMethod]
         public void OptionalPropertiesAreInjectedWhenRegisteredInContainer()
         {
             ISomeInterface expected = new Mock<ISomeInterface>().Object;
@@ -90,7 +90,7 @@ namespace Microsoft.Practices.Unity.Tests
             var result = container.Resolve<ObjectWithNamedOptionalProperty>();
 
             Assert.AreSame(namedSomeInterface, result.SomeInterface);
-        }
+        }*/
 
         public interface ISomeInterface
         {

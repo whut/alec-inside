@@ -30,7 +30,7 @@ namespace Microsoft.Practices.ObjectBuilder2
         private readonly ILGenerator il;
         private LocalBuilder existingObjectLocal;
 
-        private static readonly MethodInfo GetTypeFromHandle =
+     /*   private static readonly MethodInfo GetTypeFromHandle =
             StaticReflection.GetMethodInfo(() => Type.GetTypeFromHandle(typeof (Type).TypeHandle));
 
         private static readonly MethodInfo GetBuildKey =
@@ -50,6 +50,31 @@ namespace Microsoft.Practices.ObjectBuilder2
 
         private static readonly MethodInfo ClearCurrentOperation =
             StaticReflection.GetMethodInfo(() => DoClearCurrentOperation(null));
+       */
+  
+
+        private static readonly MethodInfo GetTypeFromHandle =
+           typeof(Type).GetMethod("GetTypeFromHandle", new[] { typeof(RuntimeTypeHandle) });
+
+        private static readonly MethodInfo GetBuildKey =
+            typeof(IBuilderContext).GetProperty("BuildKey").GetGetMethod();
+
+        private static readonly MethodInfo GetExisting =
+            typeof(IBuilderContext).GetProperty("Existing").GetGetMethod();
+
+        private static readonly MethodInfo SetExisting =
+            typeof(IBuilderContext).GetProperty("Existing").GetSetMethod();
+
+        private static readonly MethodInfo ResolveDependency =
+            typeof(IDependencyResolverPolicy).GetMethod("Resolve", new[] { typeof(IBuilderContext) });
+        
+        private static readonly MethodInfo GetResolverMethod =
+            typeof(DynamicBuildPlanGenerationContext).GetMethod("GetResolver",
+                     new[] { typeof(IBuilderContext), typeof(Type), typeof(string) });
+
+        private static readonly MethodInfo ClearCurrentOperation =
+            typeof(DynamicBuildPlanGenerationContext).GetMethod("DoClearCurrentOperation",
+                                                                 new[] { typeof(IBuilderContext) });
 
         /// <summary>
         /// Create a <see cref="DynamicBuildPlanGenerationContext"/> that is initialized

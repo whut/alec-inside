@@ -18,17 +18,23 @@ namespace Microsoft.Practices.Unity.InterceptionExtension
     {
         internal static MethodInfo GetException
         {
-            get { return StaticReflection.GetPropertyGetMethodInfo((IMethodReturn imr) => imr.Exception); }
+            get { return /*StaticReflection.GetPropertyGetMethodInfo((IMethodReturn imr) => imr.Exception)*/
+                typeof(IMethodReturn).GetProperty("Exception").GetGetMethod(); 
+            }
         }
 
         internal static MethodInfo GetReturnValue
         {
-            get { return StaticReflection.GetPropertyGetMethodInfo((IMethodReturn imr) => imr.ReturnValue); }
+            get { return /*StaticReflection.GetPropertyGetMethodInfo((IMethodReturn imr) => imr.ReturnValue)*/
+                typeof(IMethodReturn).GetProperty("ReturnValue").GetGetMethod(); 
+            }
         }
 
         internal static MethodInfo GetOutputs
         {
-            get { return StaticReflection.GetPropertyGetMethodInfo((IMethodReturn imr) => imr.Outputs); }
+            get { return /*StaticReflection.GetPropertyGetMethodInfo((IMethodReturn imr) => imr.Outputs)*/
+                typeof(IMethodReturn).GetProperty("Outputs").GetGetMethod(); 
+            }
         }
     }
 }

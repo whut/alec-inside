@@ -25,11 +25,20 @@ namespace Microsoft.Practices.ObjectBuilder2
     /// </summary>
     public class DynamicMethodPropertySetterStrategy : BuilderStrategy
     {
-        private static readonly MethodInfo setCurrentOperationToResolvingPropertyValue =
+        /*private static readonly MethodInfo setCurrentOperationToResolvingPropertyValue =
             StaticReflection.GetMethodInfo(() => SetCurrentOperationToResolvingPropertyValue(null, null));
 
         private static readonly MethodInfo setCurrentOperationToSettingProperty =
             StaticReflection.GetMethodInfo(() => SetCurrentOperationToSettingProperty(null, null));
+          */
+        private static readonly MethodInfo setCurrentOperationToResolvingPropertyValue =
+           typeof(DynamicMethodPropertySetterStrategy)
+               .GetMethod("SetCurrentOperationToResolvingPropertyValue", new[] { typeof(string), typeof(IBuilderContext) });
+
+        private static readonly MethodInfo setCurrentOperationToSettingProperty =
+            typeof(DynamicMethodPropertySetterStrategy)
+                .GetMethod("SetCurrentOperationToSettingProperty", new[] { typeof(string), typeof(IBuilderContext) });
+
 
         /// <summary>
         /// Called during the chain of responsibility for a build operation.

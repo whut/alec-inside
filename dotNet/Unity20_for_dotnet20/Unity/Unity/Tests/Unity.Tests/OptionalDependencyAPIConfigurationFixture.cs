@@ -9,12 +9,8 @@
 // FITNESS FOR A PARTICULAR PURPOSE.
 //===============================================================================
 
-using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
+
 
 namespace Microsoft.Practices.Unity.Tests
 {
@@ -43,7 +39,7 @@ namespace Microsoft.Practices.Unity.Tests
             Assert.IsNull(result.Pig);
         }
 
-        [TestMethod]
+       /* [TestMethod]
         public void CanResolveOptionalDependencyWhenConfiguredByAPI()
         {
             IGuineaPig mockPig = new Mock<IGuineaPig>().Object;
@@ -69,7 +65,7 @@ namespace Microsoft.Practices.Unity.Tests
             var result = container.Resolve<GuineaPig>();
 
             Assert.AreSame(expected, result.Pig);
-        }
+        }*/
 
         [TestMethod]
         public void CanConfigureOptionalPropertiesViaAPI()
@@ -83,7 +79,7 @@ namespace Microsoft.Practices.Unity.Tests
             Assert.IsNull(result.Pig);
         }
 
-        [TestMethod]
+        /*[TestMethod]
         public void CanConfigureOptionalParameterToInjectionMethod()
         {
             IGuineaPig expected = new Mock<IGuineaPig>().Object;
@@ -96,7 +92,7 @@ namespace Microsoft.Practices.Unity.Tests
             var result = container.Resolve<GuineaPig>();
 
             Assert.AreSame(expected, result.Pig);
-        }
+        }*/
 
         public class GuineaPig
         {

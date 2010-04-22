@@ -26,11 +26,26 @@ namespace Microsoft.Practices.ObjectBuilder2
     /// </summary>
     public class DynamicMethodCallStrategy : BuilderStrategy
     {
-        private static readonly MethodInfo setCurrentOperationToResolvingParameter =
+        /*private static readonly MethodInfo setCurrentOperationToResolvingParameter =
             StaticReflection.GetMethodInfo(() => SetCurrentOperationToResolvingParameter(null, null, null));
 
         private static readonly MethodInfo setCurrentOperationToInvokingMethod =
             StaticReflection.GetMethodInfo(() => SetCurrentOperationToInvokingMethod(null, null));
+        */
+
+        private static readonly MethodInfo setCurrentOperationToResolvingParameter =
+            typeof(DynamicMethodCallStrategy).GetMethod("SetCurrentOperationToResolvingParameter",
+                         new[]
+                             {
+                                 typeof (string), typeof (string), typeof (IBuilderContext)
+                             });
+
+        private static readonly MethodInfo setCurrentOperationToInvokingMethod =
+            typeof(DynamicMethodCallStrategy).GetMethod("SetCurrentOperationToInvokingMethod",
+                                     new[]
+                                         {
+                                             typeof (string),  typeof (IBuilderContext)
+                                         });
 
         /// <summary>
         /// Called during the chain of responsibility for a build operation. The
@@ -42,7 +57,7 @@ namespace Microsoft.Practices.ObjectBuilder2
         public override void PreBuildUp(IBuilderContext context)
         {
             var ilContext = (DynamicBuildPlanGenerationContext)(context.Existing);
-            
+
             IPolicyList resolverPolicyDestination;
             var selector = context.Policies.Get<IMethodSelectorPolicy>(context.BuildKey, out resolverPolicyDestination);
 

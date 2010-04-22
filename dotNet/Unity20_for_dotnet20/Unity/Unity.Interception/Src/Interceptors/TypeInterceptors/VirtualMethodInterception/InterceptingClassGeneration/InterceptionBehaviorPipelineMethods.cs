@@ -19,17 +19,27 @@ namespace Microsoft.Practices.Unity.InterceptionExtension
     {
         internal static ConstructorInfo Constructor
         {
-            get { return StaticReflection.GetConstructorInfo(() => new InterceptionBehaviorPipeline()); }
+            get
+            {
+                return /*StaticReflection.GetConstructorInfo(() => new InterceptionBehaviorPipeline())*/
+                    typeof(InterceptionBehaviorPipeline).GetConstructor(Type.EmptyTypes);
+            }
         }
 
         internal static MethodInfo Add
         {
-            get { return StaticReflection.GetMethodInfo((InterceptionBehaviorPipeline pip) => pip.Add(null)); }
+            get
+            {
+                return /*StaticReflection.GetMethodInfo((InterceptionBehaviorPipeline pip) => pip.Add(null))*/
+                    typeof(InterceptionBehaviorPipeline).GetMethod("Add", new[] { typeof(IInterceptionBehavior) });
+            }
         }
 
         internal static MethodInfo Invoke
         {
-            get { return StaticReflection.GetMethodInfo((InterceptionBehaviorPipeline pip) => pip.Invoke(null, null)); }
+            get { return /*StaticReflection.GetMethodInfo((InterceptionBehaviorPipeline pip) => pip.Invoke(null, null))*/
+                typeof(InterceptionBehaviorPipeline).GetMethod("Invoke", new[] { typeof(IMethodInvocation), typeof(InvokeInterceptionBehaviorDelegate) });
+            }
         }
     }
 }

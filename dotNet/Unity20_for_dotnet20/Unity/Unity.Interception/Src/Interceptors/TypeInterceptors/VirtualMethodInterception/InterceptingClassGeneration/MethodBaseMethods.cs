@@ -22,8 +22,9 @@ namespace Microsoft.Practices.Unity.InterceptionExtension
         {
             get
             {
-                return StaticReflection.GetMethodInfo(
-                    () => MethodBase.GetMethodFromHandle(default(RuntimeMethodHandle)));
+                return /*StaticReflection.GetMethodInfo(
+                    () => MethodBase.GetMethodFromHandle(default(RuntimeMethodHandle)))*/
+                    typeof(MethodBase).GetMethod("GetMethodFromHandle", new[] { typeof(RuntimeMethodHandle) });
             }
         }
 
@@ -31,8 +32,9 @@ namespace Microsoft.Practices.Unity.InterceptionExtension
         {
             get
             {
-                return StaticReflection.GetMethodInfo(
-                    () => MethodBase.GetMethodFromHandle(default(RuntimeMethodHandle), default(RuntimeTypeHandle)));
+                return /*StaticReflection.GetMethodInfo(
+                    () => MethodBase.GetMethodFromHandle(default(RuntimeMethodHandle), default(RuntimeTypeHandle)))*/
+                    typeof(MethodBase).GetMethod("GetMethodFromHandle", new[] { typeof(RuntimeMethodHandle), typeof(RuntimeTypeHandle) }); ;
             }
         }
     }

@@ -17,7 +17,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Practices.Unity.InterceptionExtension.Tests
 {
-    [TestClass]
+ /*   [TestClass]
     public class AttributeDrivenPolicyFixture
     {
         MethodImplementationInfo nothingSpecialMethod;
@@ -436,5 +436,5 @@ namespace Microsoft.Practices.Unity.InterceptionExtension.Tests
         }
 
         #endregion
-    }
+    }*/
 }

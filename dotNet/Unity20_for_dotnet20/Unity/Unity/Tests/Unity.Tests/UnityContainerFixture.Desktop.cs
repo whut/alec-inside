@@ -15,7 +15,6 @@ using System.Runtime.InteropServices;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Messaging;
 using System.Runtime.Remoting.Proxies;
-using System.ServiceModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Practices.Unity.Tests
@@ -66,7 +65,7 @@ namespace Microsoft.Practices.Unity.Tests
         {
         }
 
-        [TestMethod]
+        /*[TestMethod]
         public void CanBuildUpProxiedClass()
         {
             using (var channelFactory = GetChannelFactory())
@@ -90,9 +89,9 @@ namespace Microsoft.Practices.Unity.Tests
                 }
                 catch (ArgumentException) { }
             }
-        }
+        }*/
 
-        private static ChannelFactory<IService> GetChannelFactory()
+        /*private static ChannelFactory<IService> GetChannelFactory()
         {
             return
                 new ChannelFactory<IService>(
@@ -113,12 +112,12 @@ namespace Microsoft.Practices.Unity.Tests
             catch (ArgumentException) { }
         }
 
-        [ServiceContract]
+      [ServiceContract]
         public interface IService
         {
             [OperationContract]
             void Ignore();
-        }
+        }*/
 
         public class MyProxy : RealProxy, IRemotingTypeInfo
         {

@@ -20,8 +20,9 @@ namespace Microsoft.Practices.Unity.InterceptionExtension
         {
             get
             {
-                return StaticReflection.GetConstructorInfo(
-                    () => new VirtualMethodInvocation(default(object), default(MethodBase)));
+                return /*StaticReflection.GetConstructorInfo(
+                    () => new VirtualMethodInvocation(default(object), default(MethodBase)))*/
+                    typeof(VirtualMethodInvocation).GetConstructor(new[] { typeof(object), typeof(MethodBase), typeof(object[]) });
             }
         }
     }

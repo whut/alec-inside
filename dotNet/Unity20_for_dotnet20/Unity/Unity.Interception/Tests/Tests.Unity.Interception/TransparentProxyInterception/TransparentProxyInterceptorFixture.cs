@@ -113,7 +113,7 @@ namespace Microsoft.Practices.Unity.InterceptionExtension.Tests.TransparentProxy
             CollectionAssert.AreEquivalent(expected.ToList(), methods);
         }
 
-        [TestMethod]
+   /*     [TestMethod]
         public void AssortedParameterKindsAreProperlyHandled()
         {
             TransparentProxyInterceptor interceptor = new TransparentProxyInterceptor();
@@ -126,7 +126,7 @@ namespace Microsoft.Practices.Unity.InterceptionExtension.Tests.TransparentProxy
                     target);
 
             AssortedParameterKindsAreProperlyHandledHelper.PerformTest(proxy);
-        }
+        }*/
 
         private static List<MethodImplementationInfo> GetMethods<T>()
         {

@@ -19,7 +19,7 @@ namespace Microsoft.Practices.Unity.InterceptionExtension.Tests
     [TestClass]
     public class ParameterCollectionFixture
     {
-        [TestMethod]
+    /*    [TestMethod]
         public void CanAccessNonFilteredParameters()
         {
             var collection =
@@ -102,7 +102,7 @@ namespace Microsoft.Practices.Unity.InterceptionExtension.Tests
             var result = collection.Contains(null);
 
             Assert.IsTrue(result);
-        }
+        }*/
 
         public static void TestMethod(object param1, object param2, object param3, object param4, object param5)
         {

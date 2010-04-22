@@ -26,6 +26,7 @@
     <DocumentationFile>..\..\bin\Desktop\Debug\Microsoft.Practices.Unity.Configuration.xml</DocumentationFile>
     <RunCodeAnalysis>true</RunCodeAnalysis>
     <CodeAnalysisRules>-Microsoft.Design#CA2210;-Microsoft.Design#CA1020</CodeAnalysisRules>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>

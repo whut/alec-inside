@@ -20,7 +20,9 @@ namespace Microsoft.Practices.Unity.InterceptionExtension
     {
         public static ConstructorInfo CompilerGeneratedAttribute
         {
-            get { return StaticReflection.GetConstructorInfo(() => new CompilerGeneratedAttribute()); }
+            get { return /*StaticReflection.GetConstructorInfo(() => new CompilerGeneratedAttribute())*/
+                typeof(CompilerGeneratedAttribute).GetConstructor(Type.EmptyTypes); 
+            }
         }
     }
 }

@@ -19,6 +19,7 @@ using System.Reflection.Emit;
 using System.Security;
 using Microsoft.Practices.ObjectBuilder2;
 using Microsoft.Practices.Unity.InterceptionExtension.Properties;
+using Wintellect.PowerCollections;
 
 namespace Microsoft.Practices.Unity.InterceptionExtension
 {

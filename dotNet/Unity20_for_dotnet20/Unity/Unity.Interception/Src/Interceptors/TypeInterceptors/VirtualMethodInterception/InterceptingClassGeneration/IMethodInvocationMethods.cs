@@ -23,7 +23,10 @@ namespace Microsoft.Practices.Unity.InterceptionExtension
     {
         internal static MethodInfo CreateExceptionMethodReturn
         {
-            get { return StaticReflection.GetMethodInfo((IMethodInvocation mi) => mi.CreateExceptionMethodReturn(default(Exception))); }
+            get {
+                return /*StaticReflection.GetMethodInfo((IMethodInvocation mi) => mi.CreateExceptionMethodReturn(default(Exception)))*/
+                    typeof(IMethodInvocation).GetMethod("CreateExceptionMethodReturn", new[] { typeof(Exception) });
+                }
         }
 
         internal static MethodInfo CreateReturn
@@ -35,7 +38,9 @@ namespace Microsoft.Practices.Unity.InterceptionExtension
 
         internal static MethodInfo GetArguments
         {
-            get { return StaticReflection.GetPropertyGetMethodInfo((IMethodInvocation mi) => mi.Arguments); }
+            get { return /*StaticReflection.GetPropertyGetMethodInfo((IMethodInvocation mi) => mi.Arguments)*/
+                typeof(IMethodInvocation).GetProperty("Arguments").GetGetMethod();
+            }
         }
     }
 }

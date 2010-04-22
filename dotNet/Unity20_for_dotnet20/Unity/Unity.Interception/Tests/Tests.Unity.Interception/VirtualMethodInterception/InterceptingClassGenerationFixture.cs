@@ -474,7 +474,7 @@ namespace Microsoft.Practices.Unity.InterceptionExtension.Tests.VirtualMethodInt
                 });
         }
 
-        [TestMethod]
+    /*    [TestMethod]
         public void CanInvokeMethodsFromDifferentTypesWithMatchingSignatures()
         {
             InterceptingClassGenerator generator =
@@ -539,7 +539,7 @@ namespace Microsoft.Practices.Unity.InterceptionExtension.Tests.VirtualMethodInt
             Assert.AreSame(
                 StaticReflection.GetMethodInfo<IDeriveFromIDoSomething>(i => i.DoSomethingElse()),
                 interceptedMethods[3]);
-        }
+        }*/
 
         [TestMethod]
         public void CanInterceptProtectedVirtualProperties()

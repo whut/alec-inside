@@ -10,15 +10,12 @@
 //===============================================================================
 
 using System;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 
 namespace Microsoft.Practices.Unity.InterceptionExtension.Tests
 {
     public static class AssortedParameterKindsAreProperlyHandledHelper
     {
-        public static void PerformTest(IInterceptingProxy proxy)
+    /*    public static void PerformTest(IInterceptingProxy proxy)
         {
             Mock<IInterceptionBehavior> behavior = new Mock<IInterceptionBehavior>();
             behavior.Setup(p => p.WillExecute).Returns(true);
@@ -100,7 +97,7 @@ namespace Microsoft.Practices.Unity.InterceptionExtension.Tests
 
             Assert.AreEqual(11 + 25 + 13 + 39 + 15, originalReturnValue);
         }
-
+        */
         public interface ITypeWithAssertedParameterKinds
         {
             int DoSomething(int param1, out int param2, int param3, ref int param4, int param5);

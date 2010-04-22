@@ -18,7 +18,11 @@ namespace Microsoft.Practices.Unity.InterceptionExtension
     {
         internal static MethodInfo AddInterceptionBehavior
         {
-            get { return StaticReflection.GetMethodInfo<IInterceptingProxy>(ip => ip.AddInterceptionBehavior(null)); }
+            get
+            {
+                return /*StaticReflection.GetMethodInfo<IInterceptingProxy>(ip => ip.AddInterceptionBehavior(null))*/
+                    typeof(IInterceptingProxy).GetMethod("AddInterceptionBehavior", new[] { typeof(IInterceptionBehavior) });
+            }
         }
     }
 }

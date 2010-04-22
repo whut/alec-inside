@@ -26,6 +26,7 @@ namespace Unity.ServiceLocation.Tests
     public abstract class ServiceLocatorFixture
     {
         protected IServiceLocator locator;
+        public delegate void Action();
 
         protected abstract IServiceLocator CreateServiceLocator();
 

@@ -17,7 +17,7 @@ namespace Microsoft.Practices.Unity.InterceptionExtension.Tests.PolicyInjection
     [TestClass]
     public class HandlerPipelineKeyFixture
     {
-        [TestMethod]
+   /*     [TestMethod]
         public void KeysForSameMethodAreEqual()
         {
             var key1 = HandlerPipelineKey.ForMethod(StaticReflection.GetMethodInfo<Base>(b => b.Method1()));
@@ -51,7 +51,7 @@ namespace Microsoft.Practices.Unity.InterceptionExtension.Tests.PolicyInjection
             var key2 = HandlerPipelineKey.ForMethod(StaticReflection.GetMethodInfo<Base>(b => b.Method2()));
 
             Assert.AreNotEqual(key1, key2);
-        }
+        }*/
 
         [TestMethod]
         public void KeysForOverridenMethodReflectedFromDifferentTypesAreNotEqual()

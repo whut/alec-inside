@@ -27,7 +27,7 @@ namespace Microsoft.Practices.ObjectBuilder2
     /// </summary>
     public class DynamicMethodConstructorStrategy : BuilderStrategy
     {
-        private static readonly MethodInfo throwForNullExistingObject =
+      /*  private static readonly MethodInfo throwForNullExistingObject =
             StaticReflection.GetMethodInfo(() => ThrowForNullExistingObject(null));
 
         private static readonly MethodInfo throwForNullExistingObjectWithInvalidConstructor =
@@ -46,7 +46,34 @@ namespace Microsoft.Practices.ObjectBuilder2
             StaticReflection.GetPropertySetMethodInfo<IBuilderContext, object>(ctx => ctx.Existing);
 
         private static readonly MethodInfo setPerBuildSingleton =
-            StaticReflection.GetMethodInfo(() => SetPerBuildSingleton(null));
+            StaticReflection.GetMethodInfo(() => SetPerBuildSingleton(null));*/
+
+        private static MethodInfo throwForNullExistingObject =
+            typeof(DynamicMethodConstructorStrategy).GetMethod("ThrowForNullExistingObject",
+                                                    new[] { typeof(IBuilderContext) });
+
+        private static readonly MethodInfo throwForNullExistingObjectWithInvalidConstructor =
+             typeof(DynamicMethodConstructorStrategy).GetMethod("ThrowForNullExistingObjectWithInvalidConstructor",
+                                    new[] { typeof(IBuilderContext), typeof(string) });
+
+        private static readonly MethodInfo throwForAttemptingToConstructInterface =
+            typeof(DynamicMethodConstructorStrategy).GetMethod("ThrowForAttemptingToConstructInterface",
+                                                    new[] { typeof(IBuilderContext) });            
+
+        private static readonly MethodInfo setCurrentOperationToResolvingParameter =
+            typeof(DynamicMethodConstructorStrategy).GetMethod("SetCurrentOperationToResolvingParameter",
+                                    new[] { typeof(string),typeof(string),typeof(IBuilderContext) });     
+
+        private static readonly MethodInfo setCurrentOperationToInvokingConstructor =
+             typeof(DynamicMethodConstructorStrategy).GetMethod("SetCurrentOperationToInvokingConstructor",
+                                    new[] {  typeof(string), typeof(IBuilderContext) });       
+
+        private static readonly MethodInfo setExistingInContext =
+             typeof(IBuilderContext).GetProperty("Existing").GetSetMethod();           
+
+        private static readonly MethodInfo setPerBuildSingleton =
+            typeof(DynamicMethodConstructorStrategy).GetMethod("SetPerBuildSingleton",
+                                                    new[] { typeof(IBuilderContext) });       
 
         /// <summary>
         /// Called during the chain of responsibility for a build operation.

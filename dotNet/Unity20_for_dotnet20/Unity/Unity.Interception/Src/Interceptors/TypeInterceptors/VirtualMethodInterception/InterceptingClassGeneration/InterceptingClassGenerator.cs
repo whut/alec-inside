@@ -18,6 +18,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Security;
+using Wintellect.PowerCollections;
 
 namespace Microsoft.Practices.Unity.InterceptionExtension
 {
