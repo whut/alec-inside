@@ -8,12 +8,15 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microsoft.Practices.Unity</RootNamespace>
-    <AssemblyName>Microsoft.Practices.Unity</AssemblyName><FileUpgradeFlags>
+    <AssemblyName>Microsoft.Practices.Unity</AssemblyName>
+    <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>2.0</OldToolsVersion>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkSubset>
+    </TargetFrameworkSubset>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -24,7 +27,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\..\bin\Desktop\Debug\Microsoft.Practices.Unity.xml</DocumentationFile>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <RunCodeAnalysis>true</RunCodeAnalysis>
     <CodeAnalysisRules>-Microsoft.Usage#CA2209;-Microsoft.Design#CA2210;-Microsoft.Design#CA1020;-Microsoft.Design#CA1004;-Microsoft.Design#CA1063;-Microsoft.Maintainability#CA1506</CodeAnalysisRules>
   </PropertyGroup>
@@ -41,14 +44,15 @@
     <CodeAnalysisRules>-Microsoft.Design#CA1004;-Microsoft.Design#CA1063</CodeAnalysisRules>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LinqBridge, Version=1.1.0.0, Culture=neutral, PublicKeyToken=c2b14eb747628076, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\depend\LinqBridge.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Lib\Desktop\Microsoft.Practices.ServiceLocation.dll</HintPath>
+      <HintPath>..\..\..\depend\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -56,6 +60,7 @@
     <None Include="..\..\Common\GlobalAssemblyInfo.2010.cs">
       <Link>GlobalAssemblyInfo.2010.cs</Link>
     </None>
+    <None Include="app.config" />
     <Compile Include="..\..\Common\GlobalAssemblyInfo.cs">
       <Link>GlobalAssemblyInfo.cs</Link>
     </Compile>
@@ -159,6 +164,7 @@
     <Compile Include="ObjectBuilder\Utility\Sequence.cs" />
     <Compile Include="ResolutionFailedException.Desktop.cs" />
     <Compile Include="StaticFactory\StaticFactoryExtension.cs" />
+    <Compile Include="ToNet20\ExtensionAttribute.cs" />
     <Compile Include="TypeBasedOverride.cs" />
     <Compile Include="UnityContainerExtensions.cs" />
     <Compile Include="UnityDefaultStrategiesExtension.Desktop.cs" />

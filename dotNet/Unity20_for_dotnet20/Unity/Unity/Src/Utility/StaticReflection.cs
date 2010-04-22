@@ -8,7 +8,7 @@
 // LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
 // FITNESS FOR A PARTICULAR PURPOSE.
 //===============================================================================
-
+/*
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
@@ -140,4 +140,4 @@ namespace Microsoft.Practices.Unity.Utility
             }
         }
     }
-}
+}*/
