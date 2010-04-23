@@ -10,6 +10,7 @@
 //===============================================================================
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NMock2;
 
 
 namespace Microsoft.Practices.Unity.Tests
@@ -28,10 +29,12 @@ namespace Microsoft.Practices.Unity.Tests
             Assert.IsNull(result.SomeInterface);
         }
 
-       /* [TestMethod]
+        [TestMethod]
         public void OptionalDependencyParameterIsResolvedIfRegisteredInContainer()
         {
-            ISomeInterface expectedSomeInterface = new Mock<ISomeInterface>().Object;
+            //ISomeInterface expectedSomeInterface = new Mock<ISomeInterface>().Object;
+            ISomeInterface expectedSomeInterface = new Mockery().NewMock<ISomeInterface>();
+
             IUnityContainer container = new UnityContainer()
                 .RegisterInstance<ISomeInterface>(expectedSomeInterface);
 
@@ -43,8 +46,10 @@ namespace Microsoft.Practices.Unity.Tests
         [TestMethod]
         public void OptionalDependencyParameterIsResolvedByName()
         {
-            ISomeInterface namedSomeInterface = new Mock<ISomeInterface>().Object;
-            ISomeInterface defaultSomeInterface = new Mock<ISomeInterface>().Object;
+            //ISomeInterface namedSomeInterface = new Mock<ISomeInterface>().Object;
+            //ISomeInterface defaultSomeInterface = new Mock<ISomeInterface>().Object;
+            ISomeInterface namedSomeInterface = new Mockery().NewMock<ISomeInterface>();
+            ISomeInterface defaultSomeInterface = new Mockery().NewMock<ISomeInterface>();
 
             IUnityContainer container = new UnityContainer()
                 .RegisterInstance<ISomeInterface>(defaultSomeInterface)
@@ -54,7 +59,7 @@ namespace Microsoft.Practices.Unity.Tests
 
             Assert.AreSame(namedSomeInterface, result.SomeInterface);
         }
-        */
+        
         [TestMethod]
         public void OptionalPropertiesGetNullWhenNotConfigured()
         {
@@ -65,10 +70,11 @@ namespace Microsoft.Practices.Unity.Tests
             Assert.IsNull(result.SomeInterface);
         }
 
-       /* [TestMethod]
+        [TestMethod]
         public void OptionalPropertiesAreInjectedWhenRegisteredInContainer()
         {
-            ISomeInterface expected = new Mock<ISomeInterface>().Object;
+            //ISomeInterface expected = new Mock<ISomeInterface>().Object;
+            ISomeInterface expected = new Mockery().NewMock<ISomeInterface>();
             IUnityContainer container = new UnityContainer()
                 .RegisterInstance(expected);
 
@@ -80,8 +86,10 @@ namespace Microsoft.Practices.Unity.Tests
         [TestMethod]
         public void OptionalPropertiesAreInjectedByName()
         {
-            ISomeInterface namedSomeInterface = new Mock<ISomeInterface>().Object;
-            ISomeInterface defaultSomeInterface = new Mock<ISomeInterface>().Object;
+            //ISomeInterface namedSomeInterface = new Mock<ISomeInterface>().Object;
+            //ISomeInterface defaultSomeInterface = new Mock<ISomeInterface>().Object;
+            ISomeInterface namedSomeInterface = new Mockery().NewMock<ISomeInterface>();
+            ISomeInterface defaultSomeInterface = new Mockery().NewMock<ISomeInterface>();
 
             IUnityContainer container = new UnityContainer()
                 .RegisterInstance<ISomeInterface>(defaultSomeInterface)
@@ -90,7 +98,7 @@ namespace Microsoft.Practices.Unity.Tests
             var result = container.Resolve<ObjectWithNamedOptionalProperty>();
 
             Assert.AreSame(namedSomeInterface, result.SomeInterface);
-        }*/
+        }
 
         public interface ISomeInterface
         {

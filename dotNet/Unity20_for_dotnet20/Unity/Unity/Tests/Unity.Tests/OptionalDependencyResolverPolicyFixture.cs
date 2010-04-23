@@ -9,7 +9,10 @@
 // FITNESS FOR A PARTICULAR PURPOSE.
 //===============================================================================
 
+using Microsoft.Practices.ObjectBuilder2;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NMock2;
+using System;
 
 namespace Microsoft.Practices.Unity.Tests
 {
@@ -35,7 +38,7 @@ namespace Microsoft.Practices.Unity.Tests
             Assert.AreEqual("name", resolver.Name);
         }
 
-      /*  [TestMethod]
+       [TestMethod]
         public void ResolverReturnsNullWhenDependencyIsNotResolved()
         {
             IBuilderContext context = GetMockContextThatThrows();
@@ -67,13 +70,18 @@ namespace Microsoft.Practices.Unity.Tests
             var expectedKey = NamedTypeBuildKey.Make<string>("expected");
             var notExpectedKey = NamedTypeBuildKey.Make<string>();
 
-            var mainContext = new Mock<IBuilderContext>();
-            mainContext.Setup(c => c.NewBuildUp(expectedKey)).Returns(expected);
-            mainContext.Setup(c => c.NewBuildUp(notExpectedKey)).Returns(notExpected);
+            //var mainContext = new Mock<IBuilderContext>();
+            var mainContext = new Mockery().NewMock<IBuilderContext>();
+            
+            //mainContext.Setup(c => c.NewBuildUp(expectedKey)).Returns(expected);
+            Stub.On(mainContext).Method("NewBuildUp").With(expectedKey).Will(Return.Value(expected));
+            
+            //mainContext.Setup(c => c.NewBuildUp(notExpectedKey)).Returns(notExpected);
+            Stub.On(mainContext).Method("NewBuildUp").With(notExpectedKey).Will(Return.Value(notExpected));
 
             var resolver = new OptionalDependencyResolverPolicy(typeof(string), "expected");
 
-            object result = resolver.Resolve(mainContext.Object);
+            object result = resolver.Resolve(mainContext);
 
             Assert.AreSame(expected, result);
         }
@@ -82,21 +90,28 @@ namespace Microsoft.Practices.Unity.Tests
 
         IBuilderContext GetMockContextThatThrows()
         {
-            var mockContext = new Mock<IBuilderContext>();
-            mockContext.Setup(c => c.NewBuildUp(It.IsAny<NamedTypeBuildKey>()))
-                .Throws(new InvalidOperationException());
-            return mockContext.Object;
+            //var mockContext = new Mock<IBuilderContext>();
+            var mockContext = new Mockery().NewMock<IBuilderContext>();
+            Stub.On(mockContext).Method("NewBuildUp").WithAnyArguments()
+                .Will(Throw.Exception(new InvalidOperationException()));
+            /*mockContext.Setup(c => c.NewBuildUp(It.IsAny<NamedTypeBuildKey>()))
+                .Throws(new InvalidOperationException());*/
+            return mockContext;
         }
 
         IBuilderContext GetMockContextThatResolvesUnnamedStrings(string expected)
         {
-            var mockContext = new Mock<IBuilderContext>();
+           /*var mockContext = new Mock<IBuilderContext>();
             mockContext.Setup(c => c.NewBuildUp(It.IsAny<NamedTypeBuildKey>()))
                 .Returns(expected);
-            return mockContext.Object;
+            * */
+            var mockContext = new Mockery().NewMock<IBuilderContext>();
+            Stub.On(mockContext).Method("NewBuildUp").WithAnyArguments()
+                .Will(Return.Value(expected));
+            return mockContext;
         }
 
         #endregion
-      * */
+      
     }
 }

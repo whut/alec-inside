@@ -10,6 +10,7 @@
 //===============================================================================
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NMock2;
 
 
 namespace Microsoft.Practices.Unity.Tests
@@ -39,11 +40,11 @@ namespace Microsoft.Practices.Unity.Tests
             Assert.IsNull(result.Pig);
         }
 
-       /* [TestMethod]
+        [TestMethod]
         public void CanResolveOptionalDependencyWhenConfiguredByAPI()
         {
-            IGuineaPig mockPig = new Mock<IGuineaPig>().Object;
-
+            //IGuineaPig mockPig = new Mock<IGuineaPig>().Object;
+            IGuineaPig mockPig = new Mockery().NewMock<IGuineaPig>();
             container.RegisterType<GuineaPig>(
                     new InjectionConstructor(new OptionalParameter<IGuineaPig>()))
                 .RegisterInstance<IGuineaPig>(mockPig);
@@ -56,7 +57,8 @@ namespace Microsoft.Practices.Unity.Tests
         [TestMethod]
         public void CanResolveOptionalDependenciesByNameWithAPI()
         {
-            IGuineaPig expected = new Mock<IGuineaPig>().Object;
+           //IGuineaPig expected = new Mock<IGuineaPig>().Object;
+            IGuineaPig expected = new Mockery().NewMock<IGuineaPig>();
 
             container.RegisterType<GuineaPig>(
                     new InjectionConstructor(new OptionalParameter(typeof(IGuineaPig), "named")))
@@ -65,7 +67,7 @@ namespace Microsoft.Practices.Unity.Tests
             var result = container.Resolve<GuineaPig>();
 
             Assert.AreSame(expected, result.Pig);
-        }*/
+        }
 
         [TestMethod]
         public void CanConfigureOptionalPropertiesViaAPI()
@@ -79,10 +81,11 @@ namespace Microsoft.Practices.Unity.Tests
             Assert.IsNull(result.Pig);
         }
 
-        /*[TestMethod]
+        [TestMethod]
         public void CanConfigureOptionalParameterToInjectionMethod()
         {
-            IGuineaPig expected = new Mock<IGuineaPig>().Object;
+            //IGuineaPig expected = new Mock<IGuineaPig>().Object;
+            IGuineaPig expected = new Mockery().NewMock<IGuineaPig>();
 
             container.RegisterType<GuineaPig>(
                     new InjectionConstructor(),
@@ -92,7 +95,7 @@ namespace Microsoft.Practices.Unity.Tests
             var result = container.Resolve<GuineaPig>();
 
             Assert.AreSame(expected, result.Pig);
-        }*/
+        }
 
         public class GuineaPig
         {
