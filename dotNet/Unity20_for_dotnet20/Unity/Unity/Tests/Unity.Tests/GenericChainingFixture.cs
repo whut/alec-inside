@@ -197,6 +197,20 @@ namespace Microsoft.Practices.Unity.Tests
             Assert.IsTrue(((DisposableCommand<User>)userCommand).Disposed);
         }
 
+        [TestMethod]
+        public void DeepChain()
+        {
+            var container = new UnityContainer();
+            container.RegisterType(typeof(ICommandEmpty), typeof(Command1<>),"1", new ContainerControlledLifetimeManager(), new InjectionMember[]{});
+            container.RegisterType(typeof(ICommandEmpty), typeof(Command2<>), "2", new ContainerControlledLifetimeManager(), new InjectionMember[] { });
+            container.RegisterType(typeof(ICommandEmpty), typeof(Command3<>), "3", new ContainerControlledLifetimeManager(), new InjectionMember[] { }); 
+
+            var obj = container.Resolve<Command2<Command1<Command3<CommandStub>>>>();
+            Assert.AreSame(obj._arg.GetType(), typeof(Command1<Command3<CommandStub>>));
+            Assert.AreSame(obj._arg._arg.GetType(), typeof(Command3<CommandStub>));
+            Assert.AreSame(obj._arg._arg._arg.GetType(), typeof(CommandStub));
+        }
+
     }
 
     // Our generic interface 
@@ -204,6 +218,46 @@ namespace Microsoft.Practices.Unity.Tests
     {
         void Execute(T data);
         void ChainedExecute(ICommand<T> inner);
+    }
+
+    public interface ICommandEmpty
+    {
+       
+    }
+
+    public class Command1<T> : ICommandEmpty
+    {
+        public readonly T _arg;
+
+        public Command1( T arg )
+        {
+            _arg = arg;
+        }
+    }
+
+    public class Command2<T> : ICommandEmpty
+    {
+        public readonly T _arg;
+
+        public Command2(T arg)
+        {
+            _arg = arg;
+        }
+    }
+
+    public class Command3<T> : ICommandEmpty
+    {
+        public readonly T _arg;
+
+        public Command3(T arg)
+        {
+            _arg = arg;
+        }
+    }
+
+    public class CommandStub : ICommandEmpty
+    {
+
     }
 
     // An implementation of ICommand that executes them.

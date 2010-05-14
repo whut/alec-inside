@@ -1,0 +1,692 @@
+Index: src/Buffer.cs
+===================================================================
+--- src/Buffer.cs	(revision 0)
++++ src/Buffer.cs	(revision 0)
+@@ -0,0 +1,65 @@
++﻿using System;
++using System.Collections.Generic;
++using System.Runtime.InteropServices;
++using System.Text;
++
++namespace LinqBridge
++{
++    [StructLayout(LayoutKind.Sequential)]
++    internal struct Buffer<TElement>
++    {
++        internal TElement[] items;
++        internal int count;
++        internal Buffer(IEnumerable<TElement> source)
++        {
++            TElement[] array = null;
++            int length = 0;
++            ICollection<TElement> is2 = source as ICollection<TElement>;
++            if (is2 != null)
++            {
++                length = is2.Count;
++                if (length > 0)
++                {
++                    array = new TElement[length];
++                    is2.CopyTo(array, 0);
++                }
++            }
++            else
++            {
++                foreach (TElement local in source)
++                {
++                    if (array == null)
++                    {
++                        array = new TElement[4];
++                    }
++                    else if (array.Length == length)
++                    {
++                        TElement[] destinationArray = new TElement[length * 2];
++                        Array.Copy(array, 0, destinationArray, 0, length);
++                        array = destinationArray;
++                    }
++                    array[length] = local;
++                    length++;
++                }
++            }
++            this.items = array;
++            this.count = length;
++        }
++
++        internal TElement[] ToArray()
++        {
++            if (this.count == 0)
++            {
++                return new TElement[0];
++            }
++            if (this.items.Length == this.count)
++            {
++                return this.items;
++            }
++            TElement[] destinationArray = new TElement[this.count];
++            Array.Copy(this.items, 0, destinationArray, 0, this.count);
++            return destinationArray;
++        }
++    }
++
++}
+Index: src/Enumerable.cs
+===================================================================
+--- src/Enumerable.cs	(revision 239)
++++ src/Enumerable.cs	(working copy)
+@@ -82,7 +82,7 @@
+             IEnumerable source)
+         {
+             foreach (var item in source)
+-                yield return (TResult) item;
++                yield return (TResult)item;
+         }
+ 
+         /// <summary>
+@@ -102,7 +102,7 @@
+         {
+             foreach (var item in source)
+                 if (item is TResult)
+-                    yield return (TResult) item;
++                    yield return (TResult)item;
+         }
+ 
+         /// <summary>
+@@ -116,7 +116,7 @@
+             if (count < 0)
+                 throw new ArgumentOutOfRangeException("count", count, null);
+ 
+-            var end = (long) start + count;
++            var end = (long)start + count;
+             if (end - 1 >= int.MaxValue)
+                 throw new ArgumentOutOfRangeException("count", count, null);
+ 
+@@ -175,7 +175,7 @@
+         }
+ 
+         private static IEnumerable<TSource> WhereYield<TSource>(
+-            IEnumerable<TSource> source, 
++            IEnumerable<TSource> source,
+             Func<TSource, int, bool> predicate)
+         {
+             var i = 0;
+@@ -243,7 +243,7 @@
+         /// </summary>
+ 
+         public static IEnumerable<TResult> SelectMany<TSource, TResult>(
+-            this IEnumerable<TSource> source, 
++            this IEnumerable<TSource> source,
+             Func<TSource, int, IEnumerable<TResult>> selector)
+         {
+             CheckNotNull(selector, "selector");
+@@ -347,9 +347,9 @@
+         /// <summary>
+         /// Base implementation of First operator.
+         /// </summary>
+-        
++
+         private static TSource FirstImpl<TSource>(
+-            this IEnumerable<TSource> source, 
++            this IEnumerable<TSource> source,
+             Func<TSource> empty)
+         {
+             CheckNotNull(source, "source");
+@@ -381,7 +381,15 @@
+             this IEnumerable<TSource> source,
+             Func<TSource, bool> predicate)
+         {
+-            return First(source.Where(predicate));
++            foreach (var item in source)
++            {
++                if (predicate(item))
++                {
++                    return item;
++                }
++            }
++            throw new InvalidOperationException();
++            //return First(source.Where(predicate));
+         }
+ 
+         /// <summary>
+@@ -412,7 +420,7 @@
+         /// </summary>
+ 
+         private static TSource LastImpl<TSource>(
+-            this IEnumerable<TSource> source, 
++            this IEnumerable<TSource> source,
+             Func<TSource> empty)
+         {
+             CheckNotNull(source, "source");
+@@ -481,7 +489,7 @@
+         /// <summary>
+         /// Base implementation of Single operator.
+         /// </summary>
+-        
++
+         private static TSource SingleImpl<TSource>(
+             this IEnumerable<TSource> source,
+             Func<TSource> empty)
+@@ -604,7 +612,7 @@
+         /// <summary>
+         /// Inverts the order of the elements in a sequence.
+         /// </summary>
+- 
++
+         public static IEnumerable<TSource> Reverse<TSource>(
+             this IEnumerable<TSource> source)
+         {
+@@ -632,7 +640,21 @@
+             this IEnumerable<TSource> source,
+             int count)
+         {
+-            return source.Where((item, i) => i < count);
++            if (count <= 0)
++            {
++                yield break;
++            }
++
++            int i = 0;
++            foreach (var item in source)
++            {
++                yield return item;
++                if (count <= ++i)
++                {
++                    break;
++                }
++            }
++
+         }
+ 
+         /// <summary>
+@@ -678,16 +700,16 @@
+         }
+ 
+         private static IEnumerable<TSource> SkipWhileYield<TSource>(
+-            IEnumerable<TSource> source, 
++            IEnumerable<TSource> source,
+             Func<TSource, int, bool> predicate)
+         {
+             using (var e = source.GetEnumerator())
+             {
+-                for (var i = 0; ; i++) 
+-                { 
++                for (var i = 0; ; i++)
++                {
+                     if (!e.MoveNext())
+                         yield break;
+-                    
++
+                     if (!predicate(e.Current, i))
+                         break;
+                 }
+@@ -706,9 +728,20 @@
+             CheckNotNull(source, "source");
+ 
+             var collection = source as ICollection;
+-            return collection != null 
+-                 ? collection.Count 
+-                 : source.Aggregate(0, (count, item) => checked(count + 1));
++            if (collection != null)
++            {
++                return collection.Count;
++            }
++            int i = 0;
++            using (var enumerator = source.GetEnumerator())
++            {
++                while (enumerator.MoveNext())
++                {
++                    i = checked(i + 1);
++                }
++            }
++
++            return i;
+         }
+ 
+         /// <summary>
+@@ -734,9 +767,19 @@
+             CheckNotNull(source, "source");
+ 
+             var array = source as Array;
+-            return array != null 
+-                 ? array.LongLength 
+-                 : source.Aggregate(0L, (count, item) => count + 1);
++            if( array != null)
++            {
++                return array.LongLength;
++            }
++            long i = 0;
++            using (var enumerator = source.GetEnumerator())
++            {
++                while (enumerator.MoveNext())
++                {
++                    i++;
++                }
++            }
++            return i;
+         }
+ 
+         /// <summary>
+@@ -766,7 +809,7 @@
+         }
+ 
+         private static IEnumerable<TSource> ConcatYield<TSource>(
+-            IEnumerable<TSource> first, 
++            IEnumerable<TSource> first,
+             IEnumerable<TSource> second)
+         {
+             foreach (var item in first)
+@@ -795,7 +838,9 @@
+         public static TSource[] ToArray<TSource>(
+             this IEnumerable<TSource> source)
+         {
+-            return source.ToList().ToArray();
++            CheckNotNull(source, "source");
++            var buffer = new Buffer<TSource>(source);
++            return buffer.ToArray();
+         }
+ 
+         /// <summary>
+@@ -828,14 +873,25 @@
+             IEqualityComparer<TSource> comparer)
+         {
+             var set = new Dictionary<TSource, object>(comparer);
+-
++            bool nullProcessed = false;
+             foreach (var item in source)
+             {
+-                if (set.ContainsKey(item))
+-                    continue;
++                if (item == null)
++                {
++                    if (!nullProcessed)
++                    {
++                        nullProcessed = true;
++                        yield return item;
++                    }
++                }
++                else
++                {
++                    if (set.ContainsKey(item))
++                        continue;
+ 
+-                set.Add(item, null);
+-                yield return item;
++                    set.Add(item, null);
++                    yield return item;
++                }
+             }
+         }
+ 
+@@ -897,12 +953,12 @@
+             CheckNotNull(elementSelector, "elementSelector");
+ 
+             var lookup = new Lookup<TKey, TElement>(comparer);
+-            
++
+             foreach (var item in source)
+             {
+                 var key = keySelector(item);
+ 
+-                var grouping = (Grouping<TKey, TElement>) lookup.Find(key);
++                var grouping = (Grouping<TKey, TElement>)lookup.Find(key);
+                 if (grouping == null)
+                 {
+                     grouping = new Grouping<TKey, TElement>(key);
+@@ -1145,7 +1201,7 @@
+         /// Returns the elements of the specified sequence or the specified 
+         /// value in a singleton collection if the sequence is empty.
+         /// </summary>
+-        
++
+         public static IEnumerable<TSource> DefaultIfEmpty<TSource>(
+             this IEnumerable<TSource> source,
+             TSource defaultValue)
+@@ -1205,10 +1261,22 @@
+         /// </summary>
+ 
+         public static bool Any<TSource>(
+-            this IEnumerable<TSource> source, 
++            this IEnumerable<TSource> source,
+             Func<TSource, bool> predicate)
+         {
+-            return source.Where(predicate).Any();
++            CheckNotNull(source, "source");
++            CheckNotNull(predicate, "predicate");
++
++            foreach (var item in source)
++            {
++                if (predicate(item))
++                {
++                    return true;
++                }
++            }
++
++            return false;
++            //return source.Where(predicate).Any();
+         }
+ 
+         /// <summary>
+@@ -1273,7 +1341,7 @@
+ 
+             comparer = comparer ?? EqualityComparer<TSource>.Default;
+ 
+-            using (IEnumerator<TSource> lhs = first.GetEnumerator(), 
++            using (IEnumerator<TSource> lhs = first.GetEnumerator(),
+                                         rhs = second.GetEnumerator())
+             {
+                 do
+@@ -1283,7 +1351,7 @@
+ 
+                     if (!rhs.MoveNext())
+                         return false;
+-                } 
++                }
+                 while (comparer.Equals(lhs.Current, rhs.Current));
+             }
+ 
+@@ -1315,7 +1383,7 @@
+             CheckNotNull(source, "source");
+             Debug.Assert(lesser != null);
+ 
+-            return source.Aggregate(seed, (a, item) => lesser(a, item) ? a : item); 
++            return source.Aggregate(seed, (a, item) => lesser(a, item) ? a : item);
+             //  == MinMaxImpl(Repeat<TSource?>(null, 1).Concat(source), lesser);
+         }
+ 
+@@ -1387,7 +1455,7 @@
+         /// </summary>
+ 
+         public static IOrderedEnumerable<TSource> OrderBy<TSource, TKey>(
+-            this IEnumerable<TSource> source, 
++            this IEnumerable<TSource> source,
+             Func<TSource, TKey> keySelector)
+         {
+             return source.OrderBy(keySelector, /* comparer */ null);
+@@ -1399,7 +1467,7 @@
+         /// </summary>
+ 
+         public static IOrderedEnumerable<TSource> OrderBy<TSource, TKey>(
+-            this IEnumerable<TSource> source, 
++            this IEnumerable<TSource> source,
+             Func<TSource, TKey> keySelector,
+             IComparer<TKey> comparer)
+         {
+@@ -1414,7 +1482,7 @@
+         /// </summary>
+ 
+         public static IOrderedEnumerable<TSource> OrderByDescending<TSource, TKey>(
+-            this IEnumerable<TSource> source, 
++            this IEnumerable<TSource> source,
+             Func<TSource, TKey> keySelector)
+         {
+             return source.OrderByDescending(keySelector, /* comparer */ null);
+@@ -1426,8 +1494,8 @@
+         /// </summary>
+ 
+         public static IOrderedEnumerable<TSource> OrderByDescending<TSource, TKey>(
+-            this IEnumerable<TSource> source, 
+-            Func<TSource, TKey> keySelector, 
++            this IEnumerable<TSource> source,
++            Func<TSource, TKey> keySelector,
+             IComparer<TKey> comparer)
+         {
+             CheckNotNull(source, "source");
+@@ -1442,7 +1510,7 @@
+         /// </summary>
+ 
+         public static IOrderedEnumerable<TSource> ThenBy<TSource, TKey>(
+-            this IOrderedEnumerable<TSource> source, 
++            this IOrderedEnumerable<TSource> source,
+             Func<TSource, TKey> keySelector)
+         {
+             return source.ThenBy(keySelector, /* comparer */ null);
+@@ -1454,8 +1522,8 @@
+         /// </summary>
+ 
+         public static IOrderedEnumerable<TSource> ThenBy<TSource, TKey>(
+-            this IOrderedEnumerable<TSource> source, 
+-            Func<TSource, TKey> keySelector, 
++            this IOrderedEnumerable<TSource> source,
++            Func<TSource, TKey> keySelector,
+             IComparer<TKey> comparer)
+         {
+             CheckNotNull(source, "source");
+@@ -1469,7 +1537,7 @@
+         /// </summary>
+ 
+         public static IOrderedEnumerable<TSource> ThenByDescending<TSource, TKey>(
+-            this IOrderedEnumerable<TSource> source, 
++            this IOrderedEnumerable<TSource> source,
+             Func<TSource, TKey> keySelector)
+         {
+             return source.ThenByDescending(keySelector, /* comparer */ null);
+@@ -1481,8 +1549,8 @@
+         /// </summary>
+ 
+         public static IOrderedEnumerable<TSource> ThenByDescending<TSource, TKey>(
+-            this IOrderedEnumerable<TSource> source, 
+-            Func<TSource, TKey> keySelector, 
++            this IOrderedEnumerable<TSource> source,
++            Func<TSource, TKey> keySelector,
+             IComparer<TKey> comparer)
+         {
+             CheckNotNull(source, "source");
+@@ -1495,8 +1563,8 @@
+         /// </summary>
+ 
+         private static IEnumerable<TSource> IntersectExceptImpl<TSource>(
+-            this IEnumerable<TSource> first, 
+-            IEnumerable<TSource> second, 
++            this IEnumerable<TSource> first,
++            IEnumerable<TSource> second,
+             IEqualityComparer<TSource> comparer,
+             bool flag)
+         {
+@@ -1529,7 +1597,7 @@
+         /// </summary>
+ 
+         public static IEnumerable<TSource> Intersect<TSource>(
+-            this IEnumerable<TSource> first, 
++            this IEnumerable<TSource> first,
+             IEnumerable<TSource> second)
+         {
+             return first.Intersect(second, /* comparer */ null);
+@@ -1541,8 +1609,8 @@
+         /// </summary>
+ 
+         public static IEnumerable<TSource> Intersect<TSource>(
+-            this IEnumerable<TSource> first, 
+-            IEnumerable<TSource> second, 
++            this IEnumerable<TSource> first,
++            IEnumerable<TSource> second,
+             IEqualityComparer<TSource> comparer)
+         {
+             return IntersectExceptImpl(first, second, comparer, /* flag */ true);
+@@ -1580,7 +1648,7 @@
+         /// </summary>
+ 
+         public static Dictionary<TKey, TSource> ToDictionary<TSource, TKey>(
+-            this IEnumerable<TSource> source, 
++            this IEnumerable<TSource> source,
+             Func<TSource, TKey> keySelector)
+         {
+             return source.ToDictionary(keySelector, /* comparer */ null);
+@@ -1593,8 +1661,8 @@
+         /// </summary>
+ 
+         public static Dictionary<TKey, TSource> ToDictionary<TSource, TKey>(
+-            this IEnumerable<TSource> source, 
+-            Func<TSource, TKey> keySelector, 
++            this IEnumerable<TSource> source,
++            Func<TSource, TKey> keySelector,
+             IEqualityComparer<TKey> comparer)
+         {
+             return source.ToDictionary(keySelector, e => e);
+@@ -1605,10 +1673,10 @@
+         /// <see cref="IEnumerable{T}" /> according to specified key 
+         /// selector and element selector functions.
+         /// </summary>
+-        
++
+         public static Dictionary<TKey, TElement> ToDictionary<TSource, TKey, TElement>(
+-            this IEnumerable<TSource> source, 
+-            Func<TSource, TKey> keySelector, 
++            this IEnumerable<TSource> source,
++            Func<TSource, TKey> keySelector,
+             Func<TSource, TElement> elementSelector)
+         {
+             return source.ToDictionary(keySelector, elementSelector, /* comparer */ null);
+@@ -1621,9 +1689,9 @@
+         /// </summary>
+ 
+         public static Dictionary<TKey, TElement> ToDictionary<TSource, TKey, TElement>(
+-            this IEnumerable<TSource> source, 
+-            Func<TSource, TKey> keySelector, 
+-            Func<TSource, TElement> elementSelector, 
++            this IEnumerable<TSource> source,
++            Func<TSource, TKey> keySelector,
++            Func<TSource, TElement> elementSelector,
+             IEqualityComparer<TKey> comparer)
+         {
+             CheckNotNull(source, "source");
+@@ -1675,9 +1743,9 @@
+ 
+         public static IEnumerable<TResult> Join<TOuter, TInner, TKey, TResult>(
+             this IEnumerable<TOuter> outer,
+-            IEnumerable<TInner> inner, 
+-            Func<TOuter, TKey> outerKeySelector, 
+-            Func<TInner, TKey> innerKeySelector, 
++            IEnumerable<TInner> inner,
++            Func<TOuter, TKey> outerKeySelector,
++            Func<TInner, TKey> innerKeySelector,
+             Func<TOuter, TInner, TResult> resultSelector,
+             IEqualityComparer<TKey> comparer)
+         {
+@@ -1719,11 +1787,11 @@
+         /// </summary>
+ 
+         public static IEnumerable<TResult> GroupJoin<TOuter, TInner, TKey, TResult>(
+-            this IEnumerable<TOuter> outer, 
+-            IEnumerable<TInner> inner, 
+-            Func<TOuter, TKey> outerKeySelector, 
+-            Func<TInner, TKey> innerKeySelector, 
+-            Func<TOuter, IEnumerable<TInner>, TResult> resultSelector, 
++            this IEnumerable<TOuter> outer,
++            IEnumerable<TInner> inner,
++            Func<TOuter, TKey> outerKeySelector,
++            Func<TInner, TKey> innerKeySelector,
++            Func<TOuter, IEnumerable<TInner>, TResult> resultSelector,
+             IEqualityComparer<TKey> comparer)
+         {
+             CheckNotNull(outer, "outer");
+@@ -1735,11 +1803,11 @@
+             var lookup = inner.ToLookup(innerKeySelector, comparer);
+             return outer.Select(o => resultSelector(o, lookup[outerKeySelector(o)]));
+         }
+-        
++
+         [DebuggerStepThrough]
+         private static void CheckNotNull<T>(T value, string name) where T : class
+         {
+-            if (value == null) 
++            if (value == null)
+                 throw new ArgumentNullException(name);
+         }
+ 
+Index: src/LINQBridge.csproj
+===================================================================
+--- src/LINQBridge.csproj	(revision 239)
++++ src/LINQBridge.csproj	(working copy)
+@@ -34,9 +34,12 @@
+   </PropertyGroup>
+   <ItemGroup>
+     <Reference Include="System" />
++    <Reference Include="System.Data" />
++    <Reference Include="System.Xml" />
+   </ItemGroup>
+   <ItemGroup>
+     <Compile Include="Action.cs" />
++    <Compile Include="Buffer.cs" />
+     <Compile Include="Enumerable.cs" />
+     <Compile Include="Enumerable.g.cs">
+       <AutoGen>True</AutoGen>
+Index: test/LINQBridge.Tests/EnumerableFixture.cs
+===================================================================
+--- test/LINQBridge.Tests/EnumerableFixture.cs	(revision 239)
++++ test/LINQBridge.Tests/EnumerableFixture.cs	(working copy)
+@@ -39,6 +39,7 @@
+     using System.Linq;
+     using NUnit.Framework.SyntaxHelpers;
+     using System.Diagnostics;
++    using NUnit.Framework.Constraints;
+ 
+     #endregion
+ 
+@@ -2001,6 +2002,49 @@
+         }
+ 
+         [Test]
++        public void FirstWithPredicate_IsLazy()
++        {
++            TakeTestLazy.InstancesCount = 0;
++            var t1 = TakeTestLazy.GetFiveInstances().First(item => true);
++            Assert.IsNotNull(t1);
++            Assert.AreEqual(TakeTestLazy.InstancesCount, 1);
++            var t2 = TakeTestLazy.GetFiveInstances().First(item => TakeTestLazy.InstancesCount == 3 );
++            Assert.IsNotNull( t2 );
++            Assert.AreEqual(3, TakeTestLazy.InstancesCount);
++        }
++
++
++        [Test]
++        public void Take_IsLazy()
++        {
++            TakeTestLazy.InstancesCount = 0;
++            TakeTestLazy.GetFiveInstances().Take(0).ToArray();
++            Assert.AreEqual(TakeTestLazy.InstancesCount, 0);
++            TakeTestLazy.GetFiveInstances().Take(3).ToArray();
++            Assert.AreEqual(3, TakeTestLazy.InstancesCount);
++        }
++
++        private class TakeTestLazy
++        {
++            public static int InstancesCount;
++
++            public TakeTestLazy()
++            {
++                InstancesCount++;
++            }
++
++            public static IEnumerable<TakeTestLazy> GetFiveInstances()
++            {
++                InstancesCount = 0;
++                yield return new TakeTestLazy();
++                yield return new TakeTestLazy();
++                yield return new TakeTestLazy();
++                yield return new TakeTestLazy();
++                yield return new TakeTestLazy();
++            }
++        }
++
++        [Test]
+         [ExpectedException(typeof(ArgumentNullException))]
+         public void TakeWhile_PassNullAsPredicate_ThrowsArgumentNullException()
+         {
+@@ -2178,6 +2222,19 @@
+             Assert.That(Enumerable.AsEnumerable<object>(null), Is.Null);
+         }
+ 
++        [Test]
++        public void NullEmentCollection()
++        {
++            var list = new List<string>();
++            list.Add(null);
++            list.Add("ss");
++            list.Add(null);
++            list.Add("ss");
++            Assert.AreEqual(list.Distinct().ToList().Count, 2);
++            CollectionAssert.AllItemsAreUnique(list.Distinct().ToList());
++            CollectionAssert.AreEquivalent(list.Distinct().ToList(),new[]{"ss",null});
++        }
++
+         private Reader<T> Read<T>(params T[] source)
+         {
+             Debug.Assert(source != null);
